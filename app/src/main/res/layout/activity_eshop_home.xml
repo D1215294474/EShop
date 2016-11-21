@@ -19,6 +19,7 @@
         android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
         app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_titleTextAppearance="@style/BottomBarTextAppearance"/>
+        app:bb_titleTextAppearance="@style/BottomBarTextAppearance"
+        app:bb_inActiveTabColor="@color/gray_dark"/>
 
 </RelativeLayout>

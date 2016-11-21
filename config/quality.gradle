@@ -81,7 +81,21 @@ android {
         warningsAsErrors true
         xmlReport false
         htmlReport true
-        lintConfig file("$configDir/lint/lint.xml")
+
+        lintOptions {
+            disable 'InvalidPackage'
+            disable 'AllowBackup'
+            disable 'ContentDescription'
+            disable 'IconDensities'
+            disable 'RtlHardcoded'
+            disable 'OldTargetApi'
+            disable 'GradleDependency'
+            disable 'GoogleAppIndexingWarning'
+            disable 'IconLocation'
+            disable 'SpUsage'
+        }
+
+
         htmlOutput file("$reportsDir/lint/lint-result.html")
         xmlOutput file("$reportsDir/lint/lint-result.xml")
     }

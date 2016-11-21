@@ -3,6 +3,7 @@ package com.feicuiedu.eshop.feature;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.feicuiedu.eshop.R;
@@ -40,6 +41,12 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eshop_home);
+
+        if (savedInstanceState != null) { // “内存重启”时调用
+            // 注意必须在bottomBar.setOnTabSelectListener之前调用, 否则会出现Fragment重叠
+            retrieveFragments();
+        }
+
         bottomBar.setOnTabSelectListener(this);
     }
 
@@ -98,11 +105,21 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
             transaction.show(target);
         } else {
             // 否则直接添加该Fragment
-            transaction.add(R.id.layout_container, target);
+            transaction.add(R.id.layout_container, target, target.getClass().getName());
         }
 
         transaction.commit();
 
         mCurrentFragment = target;
+    }
+
+    // 找回FragmentManager中存储的Fragment
+    private void retrieveFragments() {
+        FragmentManager manager = getSupportFragmentManager();
+        mHomeFragment = (HomeFragment) manager.findFragmentByTag(HomeFragment.class.getName());
+        mCategoryFragment = (CategoryFragment) manager
+                .findFragmentByTag(CategoryFragment.class.getName());
+        mCartFragment = (CartFragment) manager.findFragmentByTag(CartFragment.class.getName());
+        mMineFragment = (MineFragment) manager.findFragmentByTag(MineFragment.class.getName());
     }
 }

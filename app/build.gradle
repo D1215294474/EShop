@@ -22,22 +22,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
 
-    // square内存泄漏检测工具: https://github.com/square/leakcanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-    // 视图注入工具ButterKnife: https://github.com/JakeWharton/butterknife
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.jakewharton:butterknife:8.4.0'
 
-    // 底部导航视图: https://github.com/roughike/BottomBar
     compile 'com.roughike:bottom-bar:2.0.2'
-
     compile 'com.android.support:appcompat-v7:24.2.1'
-
-
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
 }
