@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
+import com.feicuiedu.eshop.base.widgets.ptr.RefreshHeader;
 import com.feicuiedu.eshop.network.EShopClient;
 
 import java.lang.ref.WeakReference;
@@ -23,6 +24,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 import okhttp3.Call;
 
 /**
@@ -35,6 +38,8 @@ public abstract class BaseFragment extends Fragment {
 
     @Nullable @BindView(R.id.toolbar) Toolbar toolbar; // ActionBar
     @Nullable @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
+
+    @Nullable @BindView(R.id.layout_refresh) PtrFrameLayout refreshLayout;
 
     protected final EShopClient client = EShopClient.getInstance(); // 用于服务器Api请求
 
@@ -64,6 +69,18 @@ public abstract class BaseFragment extends Fragment {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             setHasOptionsMenu(true); // 设置Fragment有选项菜单.
             tvToolbarTitle.setText(getTitleId());
+        }
+
+        if (refreshLayout != null) {
+            refreshLayout.disableWhenHorizontalMove(true);
+            RefreshHeader refreshHeader = new RefreshHeader(getContext());
+            refreshLayout.setHeaderView(refreshHeader);
+            refreshLayout.addPtrUIHandler(refreshHeader);
+            refreshLayout.setPtrHandler(new PtrDefaultHandler() {
+                @Override public void onRefreshBegin(PtrFrameLayout frame) {
+                    BaseFragment.this.onRefreshBegin(frame);
+                }
+            });
         }
     }
 
@@ -97,4 +114,15 @@ public abstract class BaseFragment extends Fragment {
     @LayoutRes protected abstract int getContentViewLayout();
 
     @StringRes protected abstract int getTitleId();
+
+    protected void onRefreshBegin(PtrFrameLayout frame) {
+    }
+
+    protected void autoRefresh() {
+        if (refreshLayout == null) {
+            throw new UnsupportedOperationException("No PtrFrameLayout in this Fragment");
+        }
+
+        refreshLayout.autoRefresh();
+    }
 }

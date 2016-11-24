@@ -7,14 +7,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Status {
 
-    @SerializedName("succeed")
-    private int mSucceed;
+    @SerializedName("succeed") private int mSucceed;
 
-    @SerializedName("error_code")
-    private int mErrorCode;
+    @SerializedName("error_code") private int mErrorCode;
 
-    @SerializedName("error_desc")
-    private String mErrorDesc;
+    @SerializedName("error_desc") private String mErrorDesc;
 
     public boolean isSucceed() {
         return mSucceed == 1;

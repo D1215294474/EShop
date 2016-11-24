@@ -93,6 +93,7 @@ android {
             disable 'GoogleAppIndexingWarning'
             disable 'IconLocation'
             disable 'SpUsage'
+            disable 'ClickableViewAccessibility'
         }
 
 

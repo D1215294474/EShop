@@ -3,7 +3,7 @@
            tools:ignore="UnusedResources">
     <color name="colorPrimary">#FDD835</color>
     <color name="colorPrimaryDark">#FBD536</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#91E1D3</color>
 
     <!-- 灰度值(grayscale) -->
     <color name="white">#F6F6F6</color>
@@ -13,7 +13,9 @@
     <color name="black">#404245</color>
 
     <!-- 基本颜色 -->
-    <color name="orange">#FF6F00</color>
+    <color name="purple">#7A71E9</color>
+    <color name="orange">#F16755</color>
+    <color name="pink">#F06CA7</color>
     <color name="brown">#847534</color>
 
 </resources>

@@ -10,8 +10,7 @@ import java.util.List;
  */
 public class CategoryPrimary extends CategoryBase {
 
-    @SerializedName("children")
-    private List<CategoryBase> mChildren = Collections.emptyList();
+    @SerializedName("children") private List<CategoryBase> mChildren = Collections.emptyList();
 
     public List<CategoryBase> getChildren() {
         return mChildren;

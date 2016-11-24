@@ -3,6 +3,7 @@ package com.feicuiedu.eshop.network;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -45,7 +46,11 @@ public class EShopClient {
             throws IOException {
 
         Response response = newApiCall(apiInterface).execute();
-        return getResponseEntity(response, apiInterface.getResponseType());
+        ParameterizedType type = (ParameterizedType)
+                (apiInterface.getClass().getGenericSuperclass());
+        //noinspection unchecked
+        Class<T> entityClass = (Class<T>) type.getActualTypeArguments()[0];
+        return getResponseEntity(response, entityClass);
     }
 
     /**
