@@ -39,7 +39,7 @@ public abstract class BaseFragment extends Fragment {
     @Nullable @BindView(R.id.toolbar) Toolbar toolbar; // ActionBar
     @Nullable @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
 
-    @Nullable @BindView(R.id.layout_refresh) PtrFrameLayout refreshLayout;
+    @Nullable @BindView(R.id.layout_refresh) protected PtrFrameLayout refreshLayout;
 
     protected final EShopClient client = EShopClient.getInstance(); // 用于服务器Api请求
 

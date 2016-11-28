@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="@dimen/elevation_app_bar">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_45"
+            android:background="@color/colorPrimary"
+            app:theme="@style/Widget.AppCompat.Toolbar"
+            tools:ignore="Overdraw">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/text_tab_goods"
+                    android:layout_width="@dimen/size_80"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_bg"
+                    android:gravity="center"
+                    android:text="@string/goods"
+                    android:textAppearance="@style/AppBarText.Normal"/>
+
+                <TextView
+                    android:id="@+id/text_tab_details"
+                    android:layout_width="@dimen/size_80"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_bg"
+                    android:gravity="center"
+                    android:text="@string/details"
+                    android:textAppearance="@style/AppBarText.Normal"/>
+
+                <TextView
+                    android:id="@+id/text_tab_comments"
+                    android:layout_width="@dimen/size_80"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_bg"
+                    android:gravity="center"
+                    android:text="@string/comments"
+                    android:textAppearance="@style/AppBarText.Normal"/>
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_goods"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray_light"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="@dimen/size_45"
+                  android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_to_cart"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_tab_cart"/>
+
+        <Button
+            android:id="@+id/button_add_cart"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/add_to_shopping_cart"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_large"/>
+
+        <Button
+            android:id="@+id/button_buy"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/buy_it_now"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/font_large"/>
+
+    </LinearLayout>
+</LinearLayout>

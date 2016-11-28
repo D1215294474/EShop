@@ -7,15 +7,16 @@
     <com.feicuiedu.eshop.base.widgets.banner.BannerLayout
         android:id="@+id/layout_banner"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_height_short"/>
+        android:layout_height="@dimen/size_180"/>
 
     <TextView
+        android:id="@+id/text_promote_goods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_large"
         android:padding="@dimen/spacing_small"
-        android:textColor="@color/black"
-        android:text="@string/promote_goods"/>
+        android:text="@string/promote_goods"
+        android:visibility="invisible"
+        android:textAppearance="@style/ContentText.Large"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,8 +31,9 @@
 
         <ImageView
             android:id="@+id/image_promote_one"
-            android:layout_width="@dimen/image_view_size_big"
-            android:layout_height="@dimen/image_view_size_big"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="@dimen/size_60"
+            android:background="@drawable/round_purple"
             android:visibility="invisible"/>
 
         <Space
@@ -41,8 +43,9 @@
 
         <ImageView
             android:id="@+id/image_promote_two"
-            android:layout_width="@dimen/image_view_size_big"
-            android:layout_height="@dimen/image_view_size_big"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="@dimen/size_60"
+            android:background="@drawable/round_orange"
             android:visibility="invisible"/>
 
         <Space
@@ -52,8 +55,9 @@
 
         <ImageView
             android:id="@+id/image_promote_three"
-            android:layout_width="@dimen/image_view_size_big"
-            android:layout_height="@dimen/image_view_size_big"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="@dimen/size_60"
+            android:background="@drawable/round_pink"
             android:visibility="invisible"/>
 
         <Space
@@ -63,8 +67,9 @@
 
         <ImageView
             android:id="@+id/image_promote_four"
-            android:layout_width="@dimen/image_view_size_big"
-            android:layout_height="@dimen/image_view_size_big"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="@dimen/size_60"
+            android:background="@drawable/round_yellow"
             android:visibility="invisible"/>
 
         <Space

@@ -9,13 +9,36 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="BottomBarTextAppearance" parent="TextAppearance.AppCompat">
+    <style name="ContentText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="ContentText.FixedSmall">
         <item name="android:textSize">@dimen/font_small_fixed</item>
     </style>
 
-    <style name="CategoryTextAppearance" parent="TextAppearance.AppCompat">
+    <style name="ContentText.Small">
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+
+    <style name="ContentText.Normal">
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <style name="ContentText.Large">
         <item name="android:textSize">@dimen/font_large</item>
-        <item name="android:textColor">@color/selector_text_category</item>
+    </style>
+
+    <style name="AppBarText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/app_bar_text</item>
+    </style>
+
+    <style name="AppBarText.Huge">
+        <item name="android:textSize">@dimen/font_huge</item>
+    </style>
+
+    <style name="AppBarText.Normal">
+        <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
 </resources>

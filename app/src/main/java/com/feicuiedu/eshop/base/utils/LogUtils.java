@@ -30,5 +30,9 @@ public class LogUtils {
         if (isDebug) Log.e(TAG, msg);
     }
 
+    public static void error(String msg, Throwable t) {
+        if (isDebug) Log.e(TAG, msg, t);
+    }
+
 
 }

@@ -17,15 +17,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/gray"/>
+        android:background="@color/gray_light"/>
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bar_height_normal"
+        android:layout_height="@dimen/size_54"
         app:bb_inActiveTabColor="@color/gray_dark"
         app:bb_showShadow="false"
         app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_titleTextAppearance="@style/BottomBarTextAppearance"/>
+        app:bb_titleTextAppearance="@style/ContentText.FixedSmall"/>
 
 </LinearLayout>

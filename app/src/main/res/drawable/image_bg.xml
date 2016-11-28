@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape >
+            <stroke android:color="@color/gray_light" android:width="1px"/>
+
+        </shape>
+    </item>
+
+    <item android:width="@dimen/size_54" android:height="@dimen/size_54" android:gravity="center">
+        <bitmap android:src="@drawable/ic_loading_failure"/>
+    </item>
+
+</layer-list>

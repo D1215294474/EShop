@@ -1,18 +1,22 @@
 package com.feicuiedu.eshop.feature.home;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.MaskTransformation;
 import com.feicuiedu.eshop.base.widgets.banner.BannerAdapter;
 import com.feicuiedu.eshop.base.widgets.banner.BannerLayout;
+import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiHomeBanner;
 import com.feicuiedu.eshop.network.api.ApiHomeCategory;
@@ -27,6 +31,7 @@ import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import jp.wasabeef.picasso.transformations.GrayscaleTransformation;
+import okhttp3.Call;
 
 /**
  * 主页面.
@@ -49,6 +54,7 @@ public class HomeFragment extends BaseFragment {
     private boolean mCategoryRefreshed = false;
 
     private ImageView[] mIvPromotes = new ImageView[4];
+    private TextView mTvPromoteGoods;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -82,6 +88,8 @@ public class HomeFragment extends BaseFragment {
         mIvPromotes[2] = ButterKnife.findById(view, R.id.image_promote_three);
         mIvPromotes[3] = ButterKnife.findById(view, R.id.image_promote_four);
 
+        mTvPromoteGoods = ButterKnife.findById(view, R.id.text_promote_goods);
+
         goodsListView.addHeaderView(view);
         autoRefresh();
     }
@@ -100,49 +108,87 @@ public class HomeFragment extends BaseFragment {
         mBannerRefreshed = false;
         mCategoryRefreshed = false;
 
-        client.enqueue(new ApiHomeBanner(), new UiCallback<ApiHomeBanner.Rsp>(getContext()) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiHomeBanner.Rsp responseEntity) {
-                mBannerRefreshed = true;
-                if (mBannerRefreshed && mCategoryRefreshed) {
-                    frame.refreshComplete();
-                }
+        Call bannerCall = client.enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
+        saveCall(bannerCall);
 
-                if (success) {
-                    mBannerAdapter.reset(responseEntity.getData().getBanners());
-                    setPromoteGoods(responseEntity.getData().getGoodsList());
-                }
-            }
-        });
-
-        client.enqueue(new ApiHomeCategory(), new UiCallback<ApiHomeCategory.Rsp>(getContext()) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiHomeCategory.Rsp responseEntity) {
-                mCategoryRefreshed = true;
-                if (mBannerRefreshed && mCategoryRefreshed) {
-                    frame.refreshComplete();
-                }
-
-                if (success) {
-                    mGoodsAdapter.reset(responseEntity.getData());
-                }
-            }
-        });
+        Call categoryCall = client.enqueue(new ApiHomeCategory(),
+                new CategoryCallback(getContext()));
+        saveCall(categoryCall);
     }
 
-    private void setPromoteGoods(List<SimpleGoods> simpleGoodsList) {
+    private void setPromoteGoods(final List<SimpleGoods> simpleGoodsList) {
+
+        mTvPromoteGoods.setVisibility(View.VISIBLE);
+
         for (int i = 0; i < mIvPromotes.length; i++) {
 
             if (i < simpleGoodsList.size()) {
                 mIvPromotes[i].setVisibility(View.VISIBLE);
+                final SimpleGoods simpleGoods = simpleGoodsList.get(i);
                 Picasso.with(getContext())
-                        .load(simpleGoodsList.get(i).getImg().getLarge())
+                        .load(simpleGoods.getImg().getLarge())
                         .transform(new CropCircleTransformation())
                         .transform(new GrayscaleTransformation())
                         .transform(new MaskTransformation(getContext(), PROMOTE_COLORS[i]))
                         .into(mIvPromotes[i]);
+                mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        Intent intent = GoodsActivity.getStartIntent(
+                                getContext(), simpleGoods);
+                        getActivity().startActivity(intent);
+                    }
+                });
             } else {
                 mIvPromotes[i].setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private class BannerCallback extends UiCallback<ApiHomeBanner.Rsp> {
+
+        public BannerCallback(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onBusinessResponse(boolean success, ApiHomeBanner.Rsp responseEntity) {
+            if (!isViewBind()) {
+                return;
+            }
+
+            mBannerRefreshed = true;
+            if (mCategoryRefreshed) {
+                assert refreshLayout != null;
+                refreshLayout.refreshComplete();
+            }
+
+            if (success) {
+                mBannerAdapter.reset(responseEntity.getData().getBanners());
+                setPromoteGoods(responseEntity.getData().getGoodsList());
+            }
+        }
+    }
+
+    private class CategoryCallback extends UiCallback<ApiHomeCategory.Rsp> {
+
+        public CategoryCallback(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onBusinessResponse(boolean success, ApiHomeCategory.Rsp responseEntity) {
+            if (!isViewBind()) {
+                return;
+            }
+
+            mCategoryRefreshed = true;
+            if (mBannerRefreshed) {
+                assert refreshLayout != null;
+                refreshLayout.refreshComplete();
+            }
+
+            if (success) {
+                mGoodsAdapter.reset(responseEntity.getData());
             }
         }
     }

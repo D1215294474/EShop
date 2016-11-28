@@ -1,6 +1,8 @@
 package com.feicuiedu.eshop.feature.home;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseListAdapter;
 import com.feicuiedu.eshop.base.widgets.ImageGrid;
+import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.entity.CategoryHome;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
 import com.squareup.picasso.Picasso;
@@ -29,6 +32,9 @@ public class HomeGoodsAdapter extends BaseListAdapter<CategoryHome, HomeGoodsAda
 
     @Override
     protected void bindItem(int position, CategoryHome item, ViewHolder viewHolder) {
+
+        final Context context = viewHolder.tvCategory.getContext();
+
         viewHolder.tvCategory.setText(item.getName());
 
         ImageView[] imageViews = viewHolder.imageGrid.getImageViews();
@@ -37,11 +43,22 @@ public class HomeGoodsAdapter extends BaseListAdapter<CategoryHome, HomeGoodsAda
         int goodsCount = goodsList.size();
         for (int i = 0; i < imageViews.length; i++) {
             if (i < goodsCount) {
+                final SimpleGoods simpleGoods = goodsList.get(i);
+
                 Picasso.with(viewHolder.imageGrid.getContext())
                         .load(goodsList.get(i).getImg().getLarge())
                         .into(imageViews[i]);
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        Intent intent = GoodsActivity.getStartIntent(context, simpleGoods);
+                        context.startActivity(intent);
+                    }
+                });
             } else {
+                Picasso.with(viewHolder.imageGrid.getContext())
+                        .cancelRequest(imageViews[i]);
                 imageViews[i].setImageDrawable(null);
+                imageViews[i].setOnClickListener(null);
             }
         }
     }

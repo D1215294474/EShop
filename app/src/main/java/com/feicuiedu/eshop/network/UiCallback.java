@@ -67,8 +67,7 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
     }
 
     public final void onFailureInUi(IOException e) {
-        LogUtils.error(e.getMessage());
-
+        LogUtils.error("onFailureInUi", e);
         Toast.makeText(mContext, R.string.error_network, Toast.LENGTH_SHORT).show();
         onBusinessResponse(false, null);
     }

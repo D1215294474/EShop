@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SimpleGoods {
 
-    @SerializedName("goods_id") private int mId; // 商品ID
+    @SerializedName("id") private int mId; // 商品ID
 
     @SerializedName("name") private String mName; // 商品名称
 
