@@ -17,8 +17,15 @@
     <string name="promote_goods">促销单品</string>
 
     <string name="choose_number_and_type">请选择购买数量和类型</string>
+    <string name="enter_query_goods">请输入要搜索的商品</string>
+
+    <string name="is_hot">热销</string>
+
+    <string name="price">价格</string>
 
     <string name="goods_comments">商品评价</string>
+
+    <string name="load_more_complete">没有更多了…</string>
 
     <string name="title_home">首&#160;&#160;页</string>
     <string name="title_category">分&#160;&#160;类</string>

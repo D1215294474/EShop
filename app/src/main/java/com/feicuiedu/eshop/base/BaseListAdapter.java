@@ -51,6 +51,11 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
         notifyDataSetChanged();
     }
 
+    public void addAll(List<T> data) {
+        mDataSet.addAll(data);
+        notifyDataSetChanged();
+    }
+
     @LayoutRes protected abstract int getItemViewLayout();
 
     protected abstract V getItemViewHolder(View itemView);

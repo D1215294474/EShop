@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.network.EShopClient;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import okhttp3.Call;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected EShopClient client = EShopClient.getInstance();
+    protected static final EShopClient CLIENT = EShopClient.getInstance();
+    protected static final Gson GSON = new Gson();
 
     // 使用弱引用缓存所有Call对象, 在Fragment销毁时统一取消, 避免内存溢出.
     private final List<WeakReference<Call>> mCallList = new ArrayList<>();

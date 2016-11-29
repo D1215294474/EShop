@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SimpleGoods {
 
+    @SerializedName("goods_id") private int mGoodsId;
+
     @SerializedName("id") private int mId; // 商品ID
 
     @SerializedName("name") private String mName; // 商品名称
@@ -23,7 +25,9 @@ public class SimpleGoods {
     @SerializedName("img") private Picture mImg; // 图片
 
     public int getId() {
-        return mId;
+        if (mId != 0) return mId;
+
+        return mGoodsId;
     }
 
     public String getName() {

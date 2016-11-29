@@ -1,17 +1,21 @@
 package com.feicuiedu.eshop.feature.category;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
+import com.feicuiedu.eshop.feature.search.SearchGoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiCategory;
+import com.feicuiedu.eshop.network.entity.Filter;
 
 import butterknife.BindView;
 import butterknife.OnItemClick;
@@ -58,6 +62,18 @@ public class CategoryFragment extends BaseFragment {
         inflater.inflate(R.menu.fragment_category, menu);
     }
 
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_search) {
+            int position = categoryListView.getCheckedItemPosition();
+            int categoryId = mCategoryAdapter.getItem(position).getId();
+            navigateToSearch(categoryId);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -78,10 +94,23 @@ public class CategoryFragment extends BaseFragment {
         chooseCategory(position);
     }
 
+    @OnItemClick(R.id.list_children)
+    public void onChildrenItemClick(int position) {
+        int categoryId = mChildrenAdapter.getItem(position).getId();
+        navigateToSearch(categoryId);
+    }
+
     private void chooseCategory(int position) {
         // http://stackoverflow.com/questions/27335355/setselected-works-buggy-with-listview
         categoryListView.setItemChecked(position, true);
 
         mChildrenAdapter.reset(mCategoryAdapter.getItem(position).getChildren());
+    }
+
+    private void navigateToSearch(int categoryId) {
+        Filter filter = new Filter();
+        filter.setCategoryId(categoryId);
+        Intent intent = SearchGoodsActivity.getStartIntent(getContext(), filter);
+        getActivity().startActivity(intent);
     }
 }

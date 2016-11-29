@@ -24,7 +24,6 @@ import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -43,7 +42,6 @@ import okhttp3.Call;
 public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
     private static final String EXTRA_SIMPLE_GOODS = "EXTRA_SIMPLE_GOODS";
-    private static final Gson GSON = new Gson();
 
     /**
      * @param context     上下文对象
@@ -72,7 +70,7 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         mSimpleGoods = GSON.fromJson(extra, SimpleGoods.class);
 
         setContentView(R.layout.activity_goods);
-        Call call = client.enqueue(new ApiGoodsInfo(mSimpleGoods.getId()),
+        Call call = CLIENT.enqueue(new ApiGoodsInfo(mSimpleGoods.getId()),
                 new GoodsInfoCallback(this));
         saveCall(call);
     }
