@@ -20,4 +20,12 @@ public class Pagination {
         mPage = 1;
         return this;
     }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public int getCount() {
+        return mCount;
+    }
 }

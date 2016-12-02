@@ -10,11 +10,9 @@ import java.io.IOException;
 /**
  * 商品分类接口的单元测试.
  */
-public class ApiCategoryTest {
+public class ApiCategoryTest extends ApiTest {
 
     @Test public void getCategories() throws IOException {
-
-        EShopClient client = EShopClient.getInstance();
 
         ApiCategory apiCategory = new ApiCategory();
         ApiCategory.Rsp rsp = client.execute(apiCategory);

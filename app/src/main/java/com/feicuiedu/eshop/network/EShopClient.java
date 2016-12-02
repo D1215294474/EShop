@@ -10,6 +10,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * <p>网络接口的操作类, 网络请求使用{@link OkHttpClient}实现.
@@ -30,22 +31,38 @@ public class EShopClient {
     private final OkHttpClient mOkHttpClient;
     private final Gson mGson;
 
+    private boolean mShowLog = false;
+
     private EShopClient() {
         mGson = new Gson();
-        mOkHttpClient = new OkHttpClient();
+
+        HttpLoggingInterceptor mLoggingInterceptor = new HttpLoggingInterceptor(
+                new HttpLoggingInterceptor.Logger() {
+                    @Override public void log(String message) {
+                        if (mShowLog) System.out.println(message); // NOPMD
+                    }
+                });
+
+        mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(mLoggingInterceptor)
+                .build();
+
     }
 
     /**
      * 同步执行Api请求.
+     *
      * @param apiInterface 服务器Api接口.
-     * @param <T> 响应体的实体类型.
+     * @param <T>          响应体的实体类型.
      * @return 响应数据实体.
      * @throws IOException 请求被取消, 连接超时, 失败的响应码等等.
      */
     public <T extends ResponseEntity> T execute(ApiInterface<T> apiInterface)
             throws IOException {
 
-        Response response = newApiCall(apiInterface).execute();
+        Response response = newApiCall(apiInterface, null).execute();
         ParameterizedType type = (ParameterizedType)
                 (apiInterface.getClass().getGenericSuperclass());
         //noinspection unchecked
@@ -55,16 +72,34 @@ public class EShopClient {
 
     /**
      * 异步执行Api请求.
+     *
      * @param apiInterface 服务器Api接口.
-     * @param uiCallback 回调
-     * @param <T> 响应体的实体类型.
+     * @param uiCallback   回调
+     * @param <T>          响应体的实体类型.
      * @return {@link Call}对象.
      */
     public <T extends ResponseEntity> Call enqueue(ApiInterface<T> apiInterface,
-                                                   UiCallback<T> uiCallback) {
-        Call call = newApiCall(apiInterface);
+                                                   UiCallback<T> uiCallback,
+                                                   String tag) {
+        Call call = newApiCall(apiInterface, tag);
         call.enqueue(uiCallback);
         return call;
+    }
+
+    public void cancelByTag(String tag) {
+        // A call may transition from queue -> running. Remove queued Calls first.
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls()) {
+            if (call.request().tag().equals(tag))
+                call.cancel();
+        }
+        for (Call call : mOkHttpClient.dispatcher().runningCalls()) {
+            if (call.request().tag().equals(tag))
+                call.cancel();
+        }
+    }
+
+    public void setShowLog(boolean showLog) {
+        mShowLog = showLog;
     }
 
     <T extends ResponseEntity> T getResponseEntity(Response response, Class<T> clazz)
@@ -75,7 +110,7 @@ public class EShopClient {
         return mGson.fromJson(response.body().charStream(), clazz);
     }
 
-    private Call newApiCall(ApiInterface apiInterface) {
+    private Call newApiCall(ApiInterface apiInterface, String tag) {
         Request.Builder builder = new Request.Builder();
         builder.url(BASE_URL + apiInterface.getPath());
 
@@ -86,7 +121,7 @@ public class EShopClient {
                     .build();
             builder.post(formBody);
         }
-
+        builder.tag(tag);
         Request request = builder.build();
         return mOkHttpClient.newCall(request);
     }

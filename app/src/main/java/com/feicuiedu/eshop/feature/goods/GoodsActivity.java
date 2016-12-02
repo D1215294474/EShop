@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +23,13 @@ import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
+import com.google.gson.Gson;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.BindViews;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 /**
  * 商品页, 包含三个子页面: <br/>
@@ -50,14 +48,13 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
      */
     public static Intent getStartIntent(Context context, SimpleGoods simpleGoods) {
         Intent intent = new Intent(context, GoodsActivity.class);
-        intent.putExtra(EXTRA_SIMPLE_GOODS, GSON.toJson(simpleGoods));
+        intent.putExtra(EXTRA_SIMPLE_GOODS, new Gson().toJson(simpleGoods));
         return intent;
     }
 
     @BindViews({R.id.text_tab_goods, R.id.text_tab_details, R.id.text_tab_comments})
     List<TextView> tvTabList;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.pager_goods) ViewPager goodsPager;
 
     private SimpleGoods mSimpleGoods;
@@ -67,19 +64,14 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         super.onCreate(savedInstanceState);
 
         String extra = getIntent().getStringExtra(EXTRA_SIMPLE_GOODS);
-        mSimpleGoods = GSON.fromJson(extra, SimpleGoods.class);
+        mSimpleGoods = new Gson().fromJson(extra, SimpleGoods.class);
 
         setContentView(R.layout.activity_goods);
-        Call call = CLIENT.enqueue(new ApiGoodsInfo(mSimpleGoods.getId()),
+        enqueue(new ApiGoodsInfo(mSimpleGoods.getId()),
                 new GoodsInfoCallback(this));
-        saveCall(call);
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
-        ButterKnife.bind(this);
-        setUpAppBar();
-
+    @Override public void initView() {
         goodsPager.addOnPageChangeListener(this);
     }
 
@@ -90,11 +82,7 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            onBackPressed();
-            return true;
-        } else if (itemId == R.id.menu_share) {
+        if (item.getItemId() == R.id.menu_share) {
             Toast.makeText(this, R.string.share, Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -138,12 +126,6 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         chooseTab(position);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void setUpAppBar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-    }
 
     // 选择Tab标签, 注意此方法只改变Tab标签的UI效果, 不会改变ViewPager的位置.
     private void chooseTab(int position) {

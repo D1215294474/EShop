@@ -13,25 +13,23 @@ import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
-import com.feicuiedu.eshop.base.MaskTransformation;
+import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.base.widgets.banner.BannerAdapter;
 import com.feicuiedu.eshop.base.widgets.banner.BannerLayout;
+import com.feicuiedu.eshop.base.glide.MaskTransformation;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiHomeBanner;
 import com.feicuiedu.eshop.network.api.ApiHomeCategory;
 import com.feicuiedu.eshop.network.entity.Banner;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
-import jp.wasabeef.picasso.transformations.GrayscaleTransformation;
-import okhttp3.Call;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 /**
  * 主页面.
@@ -45,6 +43,14 @@ public class HomeFragment extends BaseFragment {
             R.color.colorPrimary
     };
 
+    private static final int[] PROMOTE_PLACE_HOLDER = {
+            R.drawable.round_purple,
+            R.drawable.round_orange,
+            R.drawable.round_pink,
+            R.drawable.round_yellow
+    };
+
+    @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
     @BindView(R.id.list_home_goods) ListView goodsListView;
 
     private HomeGoodsAdapter mGoodsAdapter;
@@ -66,15 +72,13 @@ public class HomeFragment extends BaseFragment {
 
         mBannerAdapter = new BannerAdapter<Banner>() {
             @Override protected void bind(ViewHolder holder, Banner data) {
-                Picasso.with(getContext())
-                        .load(data.getPicture().getLarge())
-                        .into(holder.ivBannerItem);
+                GlideUtils.loadBanner(data.getPicture(), holder.ivBannerItem);
             }
         };
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override protected void initView() {
+        tvToolbarTitle.setText(R.string.title_home);
         goodsListView.setAdapter(mGoodsAdapter);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -91,29 +95,20 @@ public class HomeFragment extends BaseFragment {
         mTvPromoteGoods = ButterKnife.findById(view, R.id.text_promote_goods);
 
         goodsListView.addHeaderView(view);
-        autoRefresh();
     }
-
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_home;
     }
 
-    @Override protected int getTitleId() {
-        return R.string.title_home;
-    }
-
-    @Override protected void onRefreshBegin(final PtrFrameLayout frame) {
+    @Override protected void onRefresh() {
 
         mBannerRefreshed = false;
         mCategoryRefreshed = false;
 
-        Call bannerCall = client.enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
-        saveCall(bannerCall);
+        enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
 
-        Call categoryCall = client.enqueue(new ApiHomeCategory(),
-                new CategoryCallback(getContext()));
-        saveCall(categoryCall);
+        enqueue(new ApiHomeCategory(), new CategoryCallback(getContext()));
     }
 
     private void setPromoteGoods(final List<SimpleGoods> simpleGoodsList) {
@@ -125,12 +120,14 @@ public class HomeFragment extends BaseFragment {
             if (i < simpleGoodsList.size()) {
                 mIvPromotes[i].setVisibility(View.VISIBLE);
                 final SimpleGoods simpleGoods = simpleGoodsList.get(i);
-                Picasso.with(getContext())
-                        .load(simpleGoods.getImg().getLarge())
-                        .transform(new CropCircleTransformation())
-                        .transform(new GrayscaleTransformation())
-                        .transform(new MaskTransformation(getContext(), PROMOTE_COLORS[i]))
-                        .into(mIvPromotes[i]);
+
+                GlideUtils.loadPicture(simpleGoods.getImg(),
+                        mIvPromotes[i],
+                        PROMOTE_PLACE_HOLDER[i],
+                        new CropCircleTransformation(getContext()),
+                        new GrayscaleTransformation(getContext()),
+                        new MaskTransformation(getContext(), PROMOTE_COLORS[i]));
+
                 mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = GoodsActivity.getStartIntent(
@@ -158,8 +155,7 @@ public class HomeFragment extends BaseFragment {
 
             mBannerRefreshed = true;
             if (mCategoryRefreshed) {
-                assert refreshLayout != null;
-                refreshLayout.refreshComplete();
+                stopRefresh();
             }
 
             if (success) {
@@ -183,8 +179,7 @@ public class HomeFragment extends BaseFragment {
 
             mCategoryRefreshed = true;
             if (mBannerRefreshed) {
-                assert refreshLayout != null;
-                refreshLayout.refreshComplete();
+                stopRefresh();
             }
 
             if (success) {

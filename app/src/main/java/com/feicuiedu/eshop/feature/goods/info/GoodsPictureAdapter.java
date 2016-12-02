@@ -1,13 +1,14 @@
 package com.feicuiedu.eshop.feature.goods.info;
 
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.feicuiedu.eshop.R;
+import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.network.entity.Picture;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class GoodsPictureAdapter extends PagerAdapter {
 
 
     private final List<Picture> mPictureList = new ArrayList<>();
-    
+
     public GoodsPictureAdapter(List<Picture> pictures) {
         mPictureList.addAll(pictures);
     }
@@ -33,12 +34,15 @@ public class GoodsPictureAdapter extends PagerAdapter {
     }
 
     @Override public Object instantiateItem(ViewGroup container, int position) {
-        ImageView imageView = new ImageView(container.getContext());
-        imageView.setBackgroundResource(R.drawable.image_bg);
+
+        LayoutInflater inflater = LayoutInflater.from(container.getContext());
+        ImageView imageView = (ImageView) inflater.inflate(
+                R.layout.item_goods_picture, container, false);
         container.addView(imageView);
-        Picasso.with(container.getContext())
-                .load(mPictureList.get(position).getLarge())
-                .into(imageView);
+
+        Picture picture = mPictureList.get(position);
+        GlideUtils.loadFullPicture(picture, imageView);
+
         return imageView;
     }
 

@@ -4,11 +4,11 @@ package com.feicuiedu.eshop.feature.category;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
@@ -19,7 +19,6 @@ import com.feicuiedu.eshop.network.entity.Filter;
 
 import butterknife.BindView;
 import butterknife.OnItemClick;
-import okhttp3.Call;
 
 /**
  * 分类页面.
@@ -27,12 +26,14 @@ import okhttp3.Call;
 public class CategoryFragment extends BaseFragment {
 
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
     @BindView(R.id.list_category) ListView categoryListView;
     @BindView(R.id.list_children) ListView childrenListView;
 
     private CategoryAdapter mCategoryAdapter;
     private ChildrenAdapter mChildrenAdapter;
+
+    private boolean mLoadSuccess;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -45,17 +46,7 @@ public class CategoryFragment extends BaseFragment {
         mCategoryAdapter = new CategoryAdapter();
         mChildrenAdapter = new ChildrenAdapter();
 
-        ApiCategory api = new ApiCategory();
-        Call call = client.enqueue(api, new UiCallback<ApiCategory.Rsp>(getContext()) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiCategory.Rsp responseEntity) {
-                if (success) {
-                    mCategoryAdapter.reset(responseEntity.getData());
-                    chooseCategory(0);
-                }
-            }
-        });
-        saveCall(call);
+        getCategories();
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -74,19 +65,22 @@ public class CategoryFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
 
-        categoryListView.setAdapter(mCategoryAdapter);
-        childrenListView.setAdapter(mChildrenAdapter);
+        if (!hidden && !mLoadSuccess) {
+            getCategories();
+        }
     }
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_category;
     }
 
-    @Override protected int getTitleId() {
-        return R.string.title_category;
+    @Override protected void initView() {
+        tvToolbarTitle.setText(R.string.title_category);
+        categoryListView.setAdapter(mCategoryAdapter);
+        childrenListView.setAdapter(mChildrenAdapter);
     }
 
     @OnItemClick(R.id.list_category)
@@ -98,6 +92,20 @@ public class CategoryFragment extends BaseFragment {
     public void onChildrenItemClick(int position) {
         int categoryId = mChildrenAdapter.getItem(position).getId();
         navigateToSearch(categoryId);
+    }
+
+    private void getCategories() {
+        ApiCategory api = new ApiCategory();
+        enqueue(api, new UiCallback<ApiCategory.Rsp>(getContext()) {
+            @Override
+            public void onBusinessResponse(boolean success, ApiCategory.Rsp responseEntity) {
+                if (success) {
+                    mLoadSuccess = true;
+                    mCategoryAdapter.reset(responseEntity.getData());
+                    chooseCategory(0);
+                }
+            }
+        });
     }
 
     private void chooseCategory(int position) {

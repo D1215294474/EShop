@@ -1,6 +1,7 @@
 package com.feicuiedu.eshop.feature.search;
 
 
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -10,8 +11,9 @@ import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseListAdapter;
+import com.feicuiedu.eshop.base.glide.GlideUtils;
+import com.feicuiedu.eshop.network.entity.Picture;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 
@@ -39,13 +41,10 @@ public class SearchGoodsAdapter extends
                 new StrikethroughSpan(), 0, marketPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         viewHolder.tvMarketPrice.setText(spannableString);
 
-        int width = viewHolder.ivGoods.getLayoutParams().width;
-        int height = viewHolder.ivGoods.getLayoutParams().height;
-        Picasso.with(viewHolder.itemView.getContext())
-                .load(item.getImg().getLarge())
-                .resize(width, height)
-                .centerCrop()
-                .into(viewHolder.ivGoods);
+        Context context = viewHolder.itemView.getContext();
+        Picture picture = item.getImg();
+
+        GlideUtils.loadPicture(picture, viewHolder.ivGoods);
     }
 
     public static class ViewHolder extends BaseListAdapter.ViewHolder {

@@ -42,4 +42,8 @@ public class Filter {
     public String getSortBy() {
         return mSortBy;
     }
+
+    public int getCategoryId() {
+        return mCategoryId;
+    }
 }

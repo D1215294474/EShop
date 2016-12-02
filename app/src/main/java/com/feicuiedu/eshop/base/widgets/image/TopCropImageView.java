@@ -1,4 +1,4 @@
-package com.feicuiedu.eshop.base.widgets;
+package com.feicuiedu.eshop.base.widgets.image;
 
 
 import android.content.Context;
@@ -24,11 +24,11 @@ public class TopCropImageView extends ImageView {
 
     @Override
     protected boolean setFrame(int l, int t, int r, int b) {
-        recomputeImgMatrix();
+        recomputeImgMatrix(r - l, b - t);
         return super.setFrame(l, t, r, b);
     }
 
-    private void recomputeImgMatrix() {
+    private void recomputeImgMatrix(int viewWidth, int viewHeight) {
 
         if (getDrawable() == null) {
             return;
@@ -36,10 +36,13 @@ public class TopCropImageView extends ImageView {
         Matrix matrix = getImageMatrix();
 
         float scale;
-        final int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-        final int viewHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+
         final int drawableWidth = getDrawable().getIntrinsicWidth();
         final int drawableHeight = getDrawable().getIntrinsicHeight();
+
+        if (viewWidth == 0 || viewHeight == 0 || drawableWidth == 0 || drawableHeight == 0) {
+            return;
+        }
 
         if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
             scale = (float) viewHeight / (float) drawableHeight;

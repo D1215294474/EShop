@@ -8,10 +8,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ApiHomeBannerTest {
+public class ApiHomeBannerTest extends ApiTest {
 
     @Test public void getBanners() throws IOException {
-        EShopClient client = EShopClient.getInstance();
 
         ApiHomeBanner apiHomeBanner = new ApiHomeBanner();
         ApiHomeBanner.Rsp rsp = client.execute(apiHomeBanner);

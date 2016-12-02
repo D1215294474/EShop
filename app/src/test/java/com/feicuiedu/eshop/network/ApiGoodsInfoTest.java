@@ -8,11 +8,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ApiGoodsInfoTest {
+public class ApiGoodsInfoTest extends ApiTest {
 
     @Test public void getGoodsInfo() throws IOException {
-
-        EShopClient client = EShopClient.getInstance();
 
         ApiGoodsInfo apiGoodsInfo = new ApiGoodsInfo(-1);
 

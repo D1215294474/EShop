@@ -40,13 +40,15 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_eshop_home);
 
         if (savedInstanceState != null) { // “内存重启”时调用
             // 注意必须在bottomBar.setOnTabSelectListener之前调用, 否则会出现Fragment重叠
             retrieveFragments();
         }
+        setContentView(R.layout.activity_eshop_home);
+    }
 
+    @Override public void initView() {
         bottomBar.setOnTabSelectListener(this);
     }
 
@@ -122,4 +124,6 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
         mCartFragment = (CartFragment) manager.findFragmentByTag(CartFragment.class.getName());
         mMineFragment = (MineFragment) manager.findFragmentByTag(MineFragment.class.getName());
     }
+
+
 }

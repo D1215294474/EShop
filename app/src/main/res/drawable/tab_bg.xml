@@ -4,7 +4,8 @@
     <item android:state_selected="true">
 
         <layer-list>
-            <item android:width="@dimen/size_24" android:gravity="center_horizontal">
+            <item android:left="@dimen/spacing_large"
+                  android:right="@dimen/spacing_large">
                 <shape>
                     <solid android:color="@color/orange"/>
                 </shape>

@@ -22,8 +22,11 @@ public class LogUtils {
         if (isDebug) Log.i(TAG, msg);
     }
 
-    public static void debug(String msg) {
-        if (isDebug) Log.d(TAG, msg);
+    public static void debug(String msg, Object... objects) {
+        if (isDebug) {
+            msg = String.format(msg, objects);
+            Log.d(TAG, msg);
+        }
     }
 
     public static void error(String msg) {

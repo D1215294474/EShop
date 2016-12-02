@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_small"
         android:text="@string/promote_goods"
-        android:visibility="invisible"
-        android:textAppearance="@style/ContentText.Large"/>
+        android:textAppearance="@style/ContentText.Large"
+        android:visibility="invisible"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,6 @@
             android:id="@+id/image_promote_one"
             android:layout_width="@dimen/size_60"
             android:layout_height="@dimen/size_60"
-            android:background="@drawable/round_purple"
             android:visibility="invisible"/>
 
         <Space
@@ -45,7 +44,6 @@
             android:id="@+id/image_promote_two"
             android:layout_width="@dimen/size_60"
             android:layout_height="@dimen/size_60"
-            android:background="@drawable/round_orange"
             android:visibility="invisible"/>
 
         <Space
@@ -57,7 +55,6 @@
             android:id="@+id/image_promote_three"
             android:layout_width="@dimen/size_60"
             android:layout_height="@dimen/size_60"
-            android:background="@drawable/round_pink"
             android:visibility="invisible"/>
 
         <Space
@@ -69,7 +66,6 @@
             android:id="@+id/image_promote_four"
             android:layout_width="@dimen/size_60"
             android:layout_height="@dimen/size_60"
-            android:background="@drawable/round_yellow"
             android:visibility="invisible"/>
 
         <Space

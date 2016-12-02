@@ -3,15 +3,11 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
 
-    <ProgressBar
+    <com.feicuiedu.eshop.base.widgets.CustomProgressBar
         android:id="@+id/refresh_header_progressbar"
-        style="@android:style/Widget.ProgressBar.Large.Inverse"
-        android:layout_width="@dimen/size_45"
-        android:layout_height="@dimen/size_45"
+        style="@style/CustomProgressBar"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/spacing_small"
-        android:indeterminateDrawable="@drawable/refresh_progress_indicator"
-        android:indeterminateDuration="700"
         android:visibility="invisible"/>
 
     <ImageView

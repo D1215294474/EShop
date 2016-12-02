@@ -1,4 +1,4 @@
-package com.feicuiedu.eshop.base.widgets;
+package com.feicuiedu.eshop.base.widgets.loadmore;
 
 
 import android.content.Context;

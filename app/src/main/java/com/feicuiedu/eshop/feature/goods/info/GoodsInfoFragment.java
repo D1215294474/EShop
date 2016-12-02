@@ -27,7 +27,6 @@ import me.relex.circleindicator.CircleIndicator;
 public class GoodsInfoFragment extends BaseFragment {
 
     private static final String ARGUMENT_GOODS_INFO = "ARGUMENT_GOODS_INFO";
-    private static final Gson GSON = new Gson();
 
     @BindView(R.id.pager_goods_pictures) ViewPager picturesPager; // 用于显示商品图片
     @BindView(R.id.indicator) CircleIndicator circleIndicator; // ViewPager的圆点指示器
@@ -44,7 +43,7 @@ public class GoodsInfoFragment extends BaseFragment {
     public static GoodsInfoFragment newInstance(GoodsInfo goodsInfo) {
 
         Bundle args = new Bundle();
-        args.putString(ARGUMENT_GOODS_INFO, GSON.toJson(goodsInfo));
+        args.putString(ARGUMENT_GOODS_INFO, new Gson().toJson(goodsInfo));
 
         GoodsInfoFragment fragment = new GoodsInfoFragment();
         fragment.setArguments(args);
@@ -56,13 +55,15 @@ public class GoodsInfoFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         // 获取传入的商品信息实体
-        mGoodsInfo = GSON.fromJson(getArguments().getString(ARGUMENT_GOODS_INFO),
+        mGoodsInfo = new Gson().fromJson(getArguments().getString(ARGUMENT_GOODS_INFO),
                 GoodsInfo.class);
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override protected int getContentViewLayout() {
+        return R.layout.fragment_goods_info;
+    }
 
+    @Override protected void initView() {
         // 设置显示商品图片的ViewPager
         GoodsPictureAdapter adapter = new GoodsPictureAdapter(mGoodsInfo.getPictures());
         picturesPager.setAdapter(adapter);
@@ -79,15 +80,6 @@ public class GoodsInfoFragment extends BaseFragment {
         spannableString.setSpan(
                 new StrikethroughSpan(), 0, marketPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvMarketPrice.setText(spannableString);
-    }
-
-    @Override protected int getContentViewLayout() {
-        return R.layout.fragment_goods_info;
-    }
-
-    @Override protected int getTitleId() {
-        // 无标题
-        return 0;
     }
 
     @OnClick(R.id.text_goods_comments)

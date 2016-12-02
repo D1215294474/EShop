@@ -18,16 +18,28 @@
 
     <string name="choose_number_and_type">请选择购买数量和类型</string>
     <string name="enter_query_goods">请输入要搜索的商品</string>
+    <string name="hint_username">请输入用户名</string>
+    <string name="hint_password">请输入密码</string>
+    <string name="hint_email">请输入邮箱地址</string>
 
     <string name="is_hot">热销</string>
 
     <string name="price">价格</string>
 
     <string name="goods_comments">商品评价</string>
+    <string name="sign_in_or_sign_up">登录/注册</string>
+
+    <string name="sign_in">登录</string>
+    <string name="sign_up">注册</string>
+
+    <string name="fast_sign_up">快速注册</string>
 
     <string name="load_more_complete">没有更多了…</string>
+    <string name="please_wait">请稍后…</string>
 
     <string name="title_home">首&#160;&#160;页</string>
     <string name="title_category">分&#160;&#160;类</string>
+    <string name="title_sign_in">登&#160;&#160;录</string>
+    <string name="title_sign_up">注&#160;&#160;册</string>
     <string name="error_network">网络错误, 请检查网络设置</string>
 </resources>

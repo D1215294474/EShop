@@ -7,13 +7,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseListAdapter;
+import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.base.widgets.ImageGrid;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.entity.CategoryHome;
+import com.feicuiedu.eshop.network.entity.Picture;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,9 +47,9 @@ public class HomeGoodsAdapter extends BaseListAdapter<CategoryHome, HomeGoodsAda
             if (i < goodsCount) {
                 final SimpleGoods simpleGoods = goodsList.get(i);
 
-                Picasso.with(viewHolder.imageGrid.getContext())
-                        .load(goodsList.get(i).getImg().getLarge())
-                        .into(imageViews[i]);
+                Picture picture = goodsList.get(i).getImg();
+                GlideUtils.loadPicture(picture, imageViews[i]);
+
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = GoodsActivity.getStartIntent(context, simpleGoods);
@@ -55,8 +57,7 @@ public class HomeGoodsAdapter extends BaseListAdapter<CategoryHome, HomeGoodsAda
                     }
                 });
             } else {
-                Picasso.with(viewHolder.imageGrid.getContext())
-                        .cancelRequest(imageViews[i]);
+                Glide.clear(imageViews[i]);
                 imageViews[i].setImageDrawable(null);
                 imageViews[i].setOnClickListener(null);
             }

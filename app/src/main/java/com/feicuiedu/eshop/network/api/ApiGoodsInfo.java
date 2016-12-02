@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.feicuiedu.eshop.network.ApiInterface;
 import com.feicuiedu.eshop.network.RequestParam;
 import com.feicuiedu.eshop.network.ResponseEntity;
-import com.feicuiedu.eshop.network.SessionManager;
+import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 import com.feicuiedu.eshop.network.entity.Session;
 import com.google.gson.annotations.SerializedName;
@@ -38,7 +38,7 @@ public class ApiGoodsInfo extends ApiInterface<ApiGoodsInfo.Rsp> {
         int goodsId;
 
         @SerializedName("session")
-        Session session = SessionManager.getInstance().get();
+        Session session = UserManager.getInstance().getSession();
     }
 
     public static class Rsp extends ResponseEntity {

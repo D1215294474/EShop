@@ -97,9 +97,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@color/orange"
             android:text="@string/buy_it_now"
-            android:textColor="@color/gray_dark"
+            android:textColor="@color/white"
             android:textSize="@dimen/font_large"/>
 
     </LinearLayout>

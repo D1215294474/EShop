@@ -8,11 +8,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ApiSearchTest {
+public class ApiSearchTest extends ApiTest {
 
     @Test public void searchGoods() throws IOException {
-
-        EShopClient client = EShopClient.getInstance();
 
         ApiSearch apiSearch = new ApiSearch(null, null);
         ApiSearch.Rsp rsp = client.execute(apiSearch);

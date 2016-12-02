@@ -3,7 +3,6 @@ package com.feicuiedu.eshop.feature;
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.feicuiedu.eshop.R;
@@ -21,12 +20,10 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 设置全屏(不显示状态栏)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override public void initView() {
         startSplashAnimation();
     }
 
@@ -54,4 +51,6 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
                 .setListener(this)
                 .start();
     }
+
+
 }

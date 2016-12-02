@@ -8,11 +8,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ApiHomeCategoryTest {
+public class ApiHomeCategoryTest extends ApiTest {
 
     @Test public void getHomeCategories() throws IOException {
-
-        EShopClient client = EShopClient.getInstance();
 
         ApiHomeCategory apiHomeCategory = new ApiHomeCategory();
         ApiHomeCategory.Rsp rsp = client.execute(apiHomeCategory);

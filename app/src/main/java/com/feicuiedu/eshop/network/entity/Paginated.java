@@ -25,4 +25,5 @@ public class Paginated {
     public boolean hasMore() {
         return mMore == 1;
     }
+
 }

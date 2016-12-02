@@ -3,16 +3,18 @@
 
     <item android:state_activated="true">
         <layer-list>
+
+            <item>
+                <shape>
+                    <solid android:color="@color/orange"/>
+                </shape>
+            </item>
             <item android:left="3dp">
                 <shape>
                     <solid android:color="@android:color/white"/>
                 </shape>
             </item>
-            <item android:width="2dp">
-                <shape>
-                    <solid android:color="@color/orange"/>
-                </shape>
-            </item>
+
 
         </layer-list>
     </item>

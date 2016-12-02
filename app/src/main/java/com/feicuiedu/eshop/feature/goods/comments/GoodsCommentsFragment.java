@@ -10,7 +10,7 @@ public class GoodsCommentsFragment extends BaseFragment {
         return R.layout.fragment_goods_comments;
     }
 
-    @Override protected int getTitleId() {
-        return 0;
+    @Override protected void initView() {
+
     }
 }

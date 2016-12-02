@@ -1,79 +1,132 @@
 package com.feicuiedu.eshop.base;
 
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import com.feicuiedu.eshop.R;
+import com.feicuiedu.eshop.base.widgets.ProgressDialogFragment;
+import com.feicuiedu.eshop.base.widgets.ptr.RefreshHeader;
+import com.feicuiedu.eshop.network.ApiInterface;
 import com.feicuiedu.eshop.network.EShopClient;
-import com.google.gson.Gson;
+import com.feicuiedu.eshop.network.ResponseEntity;
+import com.feicuiedu.eshop.network.UiCallback;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 import okhttp3.Call;
 
 /**
  * 通用Activity基类.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends TransitionActivity {
 
-    protected static final EShopClient CLIENT = EShopClient.getInstance();
-    protected static final Gson GSON = new Gson();
+    @Nullable @BindView(R.id.toolbar) Toolbar toolbar;
 
-    // 使用弱引用缓存所有Call对象, 在Fragment销毁时统一取消, 避免内存溢出.
-    private final List<WeakReference<Call>> mCallList = new ArrayList<>();
+    @Nullable @BindView(R.id.layout_refresh) PtrFrameLayout refreshLayout;
 
-    @Override public void onContentChanged() {
+    private ProgressDialogFragment mProgressDialogFragment;
+
+    @Override public final void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+
+        if (toolbar != null) {
+            initAppBar();
+        }
+
+        if (refreshLayout != null) {
+            initPtr();
+        }
+
+        initView();
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        // 取消所有网络请求, 避免内存溢出
-        for (WeakReference<Call> reference : mCallList) {
-            Call call = reference.get();
-            if (call != null) call.cancel();
-        }
+        EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
     }
 
-    @Override public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        setTransitionAnimation(true);
+    /**
+     * 视图初始化工作, 例如设置监听器和适配器.
+     */
+    protected abstract void initView();
+
+    protected <T extends ResponseEntity> Call enqueue(ApiInterface<T> apiInterface,
+                                                      UiCallback<T> uiCallback) {
+        return EShopClient.getInstance()
+                .enqueue(apiInterface, uiCallback, getClass().getSimpleName());
     }
 
-    @Override public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        setTransitionAnimation(true);
+    protected void showProgress() {
+        if (mProgressDialogFragment == null) mProgressDialogFragment = new ProgressDialogFragment();
+
+        if (mProgressDialogFragment.isAdded()) return;
+
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+
+        mProgressDialogFragment.show(getSupportFragmentManager(), "ProgressDialogFragment");
     }
 
-    @Override public void finish() {
-        super.finish();
-        setTransitionAnimation(false);
+    protected void dismissProgress() {
+        mProgressDialogFragment.dismiss();
     }
 
-    public void finishWithDefaultTransition() {
-        super.finish();
+    protected void onRefresh() {
     }
 
-    protected void saveCall(Call call) {
-        mCallList.add(new WeakReference<>(call));
+    protected void autoRefresh() {
+        assert refreshLayout != null;
+        refreshLayout.autoRefresh();
     }
 
-    private void setTransitionAnimation(boolean newActivityIn) {
-        if (newActivityIn) {
-            // 新页面从右边进入
-            overridePendingTransition(R.anim.push_right_in,
-                    R.anim.push_right_out);
-        } else {
-            // 上一个页面从左边进入
-            overridePendingTransition(R.anim.push_left_in,
-                    R.anim.push_left_out);
-        }
+    protected void stopRefresh() {
+        assert refreshLayout != null;
+        refreshLayout.refreshComplete();
+    }
 
+    private void initAppBar() {
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    private void initPtr() {
+        assert refreshLayout != null;
+        refreshLayout.disableWhenHorizontalMove(true);
+        RefreshHeader refreshHeader = new RefreshHeader(this);
+        refreshLayout.setHeaderView(refreshHeader);
+        refreshLayout.addPtrUIHandler(refreshHeader);
+        refreshLayout.setPtrHandler(new PtrDefaultHandler() {
+            @Override public void onRefreshBegin(PtrFrameLayout frame) {
+                onRefresh();
+            }
+        });
+
+        refreshLayout.postDelayed(new Runnable() {
+            @Override public void run() {
+                refreshLayout.autoRefresh();
+            }
+        }, 50);
     }
 
 }

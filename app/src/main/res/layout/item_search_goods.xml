@@ -9,8 +9,7 @@
     <ImageView
         android:id="@+id/image_goods"
         android:layout_width="@dimen/size_100"
-        android:layout_height="@dimen/size_100"
-        android:background="@drawable/image_bg"/>
+        android:layout_height="@dimen/size_100"/>
 
     <TextView
         android:id="@+id/text_goods_name"

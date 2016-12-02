@@ -10,6 +10,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.feicuiedu.eshop.base.glide.DefaultGlideModule"
+            android:value="GlideModule" />
         <activity
             android:name=".feature.SplashActivity"
             android:screenOrientation="portrait">
@@ -27,6 +30,12 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".feature.search.SearchGoodsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.mine.SignInActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.mine.SignUpActivity"
             android:screenOrientation="portrait"/>
     </application>
 

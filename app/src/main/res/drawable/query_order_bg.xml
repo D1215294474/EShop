@@ -4,25 +4,24 @@
     <item android:state_activated="true">
 
         <layer-list>
-            <item android:drawable="@android:color/white" android:bottom="2dp"/>
-            <item android:gravity="bottom" android:height="2dp">
+            <item android:gravity="bottom">
                 <shape android:shape="rectangle">
                     <solid android:color="@color/orange"/>
                 </shape>
             </item>
+            <item android:drawable="@android:color/white" android:bottom="2dp"/>
         </layer-list>
 
     </item>
 
     <item>
         <layer-list>
-            <item android:bottom="1dp" android:drawable="@android:color/white"/>
-
             <item android:gravity="bottom" android:height="1dp">
                 <shape android:shape="rectangle">
                     <solid android:color="@color/gray_light"/>
                 </shape>
             </item>
+            <item android:bottom="1dp" android:drawable="@android:color/white"/>
         </layer-list>
     </item>
 
