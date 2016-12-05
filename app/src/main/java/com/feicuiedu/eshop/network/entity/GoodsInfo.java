@@ -17,11 +17,17 @@ public class GoodsInfo {
 
     @SerializedName("shop_price") private String mShopPrice;
 
+    @SerializedName("market_price") private String mMarketPrice;
+
+    @SerializedName("specification") private List<GoodsSpec> mSpecs;
+
+    @SerializedName("img") private Picture mImg;
+
+    @SerializedName("goods_number") private int mNumber;
+
     public String getMarketPrice() {
         return mMarketPrice;
     }
-
-    @SerializedName("market_price") private String mMarketPrice;
 
     public List<Picture> getPictures() {
         return mPictures;
@@ -37,5 +43,17 @@ public class GoodsInfo {
 
     public String getShopPrice() {
         return mShopPrice;
+    }
+
+    public List<GoodsSpec> getSpecs() {
+        return mSpecs;
+    }
+
+    public Picture getImg() {
+        return mImg;
+    }
+
+    public int getNumber() {
+        return mNumber;
     }
 }

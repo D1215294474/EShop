@@ -77,7 +77,7 @@ public class SignUpActivity extends BaseActivity {
                 if (success) {
                     Session session = responseEntity.getData().getSession();
                     User user = responseEntity.getData().getUser();
-                    UserManager.getInstance().update(session, user);
+                    UserManager.getInstance().signIn(session, user);
                     finish();
                 }
             }

@@ -60,6 +60,8 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     private SimpleGoods mSimpleGoods;
     private GoodsInfo mGoodsInfo;
 
+    private GoodsSpecPopupWindow mGoodsSpecPopupWindow;
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -107,12 +109,20 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @Override public void onPageScrollStateChanged(int state) {
     }
 
-    @OnClick({R.id.button_to_cart, R.id.button_add_cart, R.id.button_buy})
+    @OnClick({R.id.button_show_cart, R.id.button_add_cart, R.id.button_buy})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.button_to_cart:
+            case R.id.button_show_cart:
                 break;
             case R.id.button_add_cart:
+
+                if (mGoodsInfo == null) return;
+
+                if (mGoodsSpecPopupWindow == null) {
+                    mGoodsSpecPopupWindow = new GoodsSpecPopupWindow(this, mGoodsInfo);
+                }
+                mGoodsSpecPopupWindow.show();
+
                 break;
             case R.id.button_buy:
                 break;

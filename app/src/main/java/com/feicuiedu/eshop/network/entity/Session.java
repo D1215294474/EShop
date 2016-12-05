@@ -1,13 +1,15 @@
 package com.feicuiedu.eshop.network.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * 会话实体
  */
 public class Session {
 
-    private int mUid;
+    @SerializedName("uid") private int mUid;
 
-    private String mSid;
+    @SerializedName("sid") private String mSid;
 
     public int getUid() {
         return mUid;

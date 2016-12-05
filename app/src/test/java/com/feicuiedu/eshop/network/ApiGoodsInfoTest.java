@@ -12,9 +12,9 @@ public class ApiGoodsInfoTest extends ApiTest {
 
     @Test public void getGoodsInfo() throws IOException {
 
-        ApiGoodsInfo apiGoodsInfo = new ApiGoodsInfo(-1);
+        ApiGoodsInfo apiGoodsInfo = new ApiGoodsInfo(78);
 
         ApiGoodsInfo.Rsp rsp = client.execute(apiGoodsInfo);
-        Assert.assertFalse(rsp.getStatus().isSucceed());
+        Assert.assertTrue(rsp.getStatus().isSucceed());
     }
 }

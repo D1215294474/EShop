@@ -16,6 +16,7 @@
     <dimen name="spacing_tiny">4dp</dimen>
 
     <!-- 视图尺寸 -->
+    <dimen name="size_400">400dp</dimen>
     <dimen name="size_300">300dp</dimen>
     <dimen name="size_260">260dp</dimen>
     <dimen name="size_180">180dp</dimen>

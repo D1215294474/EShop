@@ -21,6 +21,7 @@
     <string name="hint_username">请输入用户名</string>
     <string name="hint_password">请输入密码</string>
     <string name="hint_email">请输入邮箱地址</string>
+    <string name="please_choose_number">请选择数量</string>
 
     <string name="is_hot">热销</string>
 
@@ -31,11 +32,17 @@
 
     <string name="sign_in">登录</string>
     <string name="sign_up">注册</string>
+    <string name="ok">确认</string>
+
+    <string name="number">数量</string>
 
     <string name="fast_sign_up">快速注册</string>
 
     <string name="load_more_complete">没有更多了…</string>
     <string name="please_wait">请稍后…</string>
+    <string name="add_to_cart_succeed">添加成功</string>
+
+    <string name="inventory">库存</string>
 
     <string name="title_home">首&#160;&#160;页</string>
     <string name="title_category">分&#160;&#160;类</string>

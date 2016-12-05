@@ -1,7 +1,7 @@
 package com.feicuiedu.eshop.network;
 
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import com.feicuiedu.eshop.network.entity.Session;
 import com.feicuiedu.eshop.network.entity.User;
@@ -28,12 +28,17 @@ public class UserManager {
         return mUser;
     }
 
-    public void update(@Nullable Session session,
-                       @Nullable User user) {
+    public void signIn(@NonNull Session session,
+                       @NonNull User user) {
         mSession = session;
         mUser = user;
 
         EventBus.getDefault().post(new UpdateUserEvent());
+    }
+
+
+    public boolean isSignIn() {
+        return mSession != null;
     }
 
     public static class UpdateUserEvent {

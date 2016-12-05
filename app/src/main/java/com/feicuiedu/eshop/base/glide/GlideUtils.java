@@ -13,6 +13,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.network.entity.Picture;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -57,6 +60,7 @@ public class GlideUtils {
                 .placeholder(getRandomPlaceholder())
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .bitmapTransform(new TopCropTransformation(context))
                 .into(imageView);
     }
 
@@ -67,15 +71,20 @@ public class GlideUtils {
                                    Transformation<Bitmap>... transformations) {
 
         Context context = imageView.getContext();
+
+        List<Transformation<Bitmap>> transList = new ArrayList<>();
+        transList.addAll(Arrays.asList(transformations));
+        transList.add(new BlurTransformation(context, 5));
+
+
         DrawableRequestBuilder<String> thumbnailRequest = Glide
                 .with(context)
                 .load(picture.getSmall())
-                .bitmapTransform(new BlurTransformation(context, 5));
+                .bitmapTransform(transList.toArray(transformations));
 
-        if (transformations.length > 0) {
-            thumbnailRequest.bitmapTransform(transformations);
-        }
-
+        transList.clear();
+        transList.addAll(Arrays.asList(transformations));
+        transList.add(new TopCropTransformation(context));
 
         DrawableRequestBuilder<String> pictureRequest = Glide
                 .with(context)
@@ -84,11 +93,8 @@ public class GlideUtils {
                 .placeholder(placeholder)
                 .error(R.drawable.ic_loading_failure_big)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-
-        if (transformations.length > 0) {
-            pictureRequest.bitmapTransform(transformations);
-        }
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .bitmapTransform(transList.toArray(transformations));
 
         pictureRequest.into(imageView);
 

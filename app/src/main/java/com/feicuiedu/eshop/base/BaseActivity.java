@@ -62,16 +62,18 @@ public abstract class BaseActivity extends TransitionActivity {
         EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
     }
 
+    public <T extends ResponseEntity> Call enqueue(ApiInterface<T> apiInterface,
+                                                   UiCallback<T> uiCallback) {
+        return EShopClient.getInstance()
+                .enqueue(apiInterface, uiCallback, getClass().getSimpleName());
+    }
+
+
     /**
      * 视图初始化工作, 例如设置监听器和适配器.
      */
     protected abstract void initView();
 
-    protected <T extends ResponseEntity> Call enqueue(ApiInterface<T> apiInterface,
-                                                      UiCallback<T> uiCallback) {
-        return EShopClient.getInstance()
-                .enqueue(apiInterface, uiCallback, getClass().getSimpleName());
-    }
 
     protected void showProgress() {
         if (mProgressDialogFragment == null) mProgressDialogFragment = new ProgressDialogFragment();
