@@ -13,6 +13,8 @@ import com.feicuiedu.eshop.base.utils.LogUtils;
 import com.feicuiedu.eshop.base.widgets.SimpleSearchView;
 import com.feicuiedu.eshop.base.widgets.loadmore.EndlessScrollListener;
 import com.feicuiedu.eshop.base.widgets.loadmore.LoadMoreFooter;
+import com.feicuiedu.eshop.base.wrapper.PtrWrapper;
+import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiSearch;
@@ -57,6 +59,7 @@ public class SearchGoodsActivity extends BaseActivity {
     private boolean mIsLoading;
     private SearchGoodsAdapter mGoodsAdapter;
     private LoadMoreFooter mFooter;
+    private PtrWrapper mPtrWrapper;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,15 +70,22 @@ public class SearchGoodsActivity extends BaseActivity {
         setContentView(R.layout.activity_search_goods);
     }
 
-    @Override public void initView() {
+    @Override public void onContentChanged() {
+        super.onContentChanged();
 
+        new ToolbarWrapper(this);
         tvOrderList.get(0).setActivated(true);
 
+        mPtrWrapper = new PtrWrapper(this) {
+            @Override public void onRefresh() {
+                searchGoods(true);
+            }
+        };
 
         mSearchView.setOnSearchListener(new SimpleSearchView.OnSearchListener() {
             @Override public void search(String query) {
                 mFilter.setKeywords(query);
-                autoRefresh();
+                mPtrWrapper.autoRefresh();
             }
         });
 
@@ -94,12 +104,10 @@ public class SearchGoodsActivity extends BaseActivity {
                 return false;
             }
         });
+
+        mPtrWrapper.postRefresh(50);
     }
 
-    @Override
-    protected void onRefresh() {
-        searchGoods(true);
-    }
 
     @OnClick({R.id.text_is_hot, R.id.text_most_expensive, R.id.text_cheapest})
     public void chooseQueryOrder(TextView textView) {
@@ -128,14 +136,14 @@ public class SearchGoodsActivity extends BaseActivity {
         }
 
         mFilter.setSortBy(sortBy);
-        autoRefresh();
+        mPtrWrapper.autoRefresh();
     }
 
     @OnItemClick(R.id.list_goods)
     public void onItemClick(int position) {
         SimpleGoods simpleGoods = (SimpleGoods) goodsListView.getItemAtPosition(position);
         if (simpleGoods != null) {
-            Intent intent = GoodsActivity.getStartIntent(this, simpleGoods);
+            Intent intent = GoodsActivity.getStartIntent(this, simpleGoods.getId());
             startActivity(intent);
         }
     }
@@ -157,7 +165,7 @@ public class SearchGoodsActivity extends BaseActivity {
             @Override
             public void onBusinessResponse(boolean success, ApiSearch.Rsp responseEntity) {
 
-                if (isRefresh) stopRefresh();
+                if (isRefresh) mPtrWrapper.stopRefresh();
 
                 if (success) {
 

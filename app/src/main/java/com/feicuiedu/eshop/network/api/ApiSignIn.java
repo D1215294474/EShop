@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * 服务器接口: 用户登录.
  */
-public class ApiSignIn extends ApiInterface<ApiSignIn.Rsp> {
+public class ApiSignIn implements ApiInterface {
 
     private final Req mReq;
 
@@ -32,6 +32,10 @@ public class ApiSignIn extends ApiInterface<ApiSignIn.Rsp> {
 
     @Nullable @Override public RequestParam getRequestParam() {
         return mReq;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
     public static class Req extends RequestParam {

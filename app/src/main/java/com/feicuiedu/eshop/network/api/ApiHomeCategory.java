@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ApiHomeCategory extends ApiInterface<ApiHomeCategory.Rsp> {
+public class ApiHomeCategory implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
@@ -21,6 +21,10 @@ public class ApiHomeCategory extends ApiInterface<ApiHomeCategory.Rsp> {
 
     @Nullable @Override public RequestParam getRequestParam() {
         return null;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
     public static class Rsp extends ResponseEntity {

@@ -12,8 +12,12 @@ import com.feicuiedu.eshop.feature.cart.CartFragment;
 import com.feicuiedu.eshop.feature.category.CategoryFragment;
 import com.feicuiedu.eshop.feature.home.HomeFragment;
 import com.feicuiedu.eshop.feature.mine.MineFragment;
+import com.feicuiedu.eshop.network.UserManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 
@@ -48,7 +52,8 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
         setContentView(R.layout.activity_eshop_home);
     }
 
-    @Override public void initView() {
+    @Override public void onContentChanged() {
+        super.onContentChanged();
         bottomBar.setOnTabSelectListener(this);
     }
 
@@ -84,6 +89,12 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
 
         // 将Activity所在的Task移到后台, 而不是finish此Activity
         moveTaskToBack(true);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UserManager.UpdateCartEvent event) {
+        int total = UserManager.getInstance().getCartBill().getGoodsCount();
+        bottomBar.getTabAtPosition(2).setBadgeCount(total);
     }
 
 

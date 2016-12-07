@@ -52,7 +52,7 @@ public class HomeGoodsAdapter extends BaseListAdapter<CategoryHome, HomeGoodsAda
 
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        Intent intent = GoodsActivity.getStartIntent(context, simpleGoods);
+                        Intent intent = GoodsActivity.getStartIntent(context, simpleGoods.getId());
                         context.startActivity(intent);
                     }
                 });

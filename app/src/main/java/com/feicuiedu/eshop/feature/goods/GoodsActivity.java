@@ -12,18 +12,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
+import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
+import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.comments.GoodsCommentsFragment;
 import com.feicuiedu.eshop.feature.goods.details.GoodsDetailsFragment;
 import com.feicuiedu.eshop.feature.goods.info.GoodsInfoFragment;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
-import com.feicuiedu.eshop.network.entity.SimpleGoods;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -39,16 +38,16 @@ import butterknife.OnClick;
  */
 public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
-    private static final String EXTRA_SIMPLE_GOODS = "EXTRA_SIMPLE_GOODS";
+    private static final String EXTRA_GOODS_ID = "EXTRA_GOODS_ID";
 
     /**
-     * @param context     上下文对象
-     * @param simpleGoods 简单商品实体
+     * @param context 上下文对象
+     * @param goodsId 商品Id
      * @return 用于启动此Activity的Intent对象
      */
-    public static Intent getStartIntent(Context context, SimpleGoods simpleGoods) {
+    public static Intent getStartIntent(Context context, int goodsId) {
         Intent intent = new Intent(context, GoodsActivity.class);
-        intent.putExtra(EXTRA_SIMPLE_GOODS, new Gson().toJson(simpleGoods));
+        intent.putExtra(EXTRA_GOODS_ID, goodsId);
         return intent;
     }
 
@@ -57,7 +56,6 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @BindView(R.id.pager_goods) ViewPager goodsPager;
 
-    private SimpleGoods mSimpleGoods;
     private GoodsInfo mGoodsInfo;
 
     private GoodsSpecPopupWindow mGoodsSpecPopupWindow;
@@ -65,15 +63,16 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String extra = getIntent().getStringExtra(EXTRA_SIMPLE_GOODS);
-        mSimpleGoods = new Gson().fromJson(extra, SimpleGoods.class);
+        int goodsId = getIntent().getIntExtra(EXTRA_GOODS_ID, 0);
 
         setContentView(R.layout.activity_goods);
-        enqueue(new ApiGoodsInfo(mSimpleGoods.getId()),
+        enqueue(new ApiGoodsInfo(goodsId),
                 new GoodsInfoCallback(this));
     }
 
-    @Override public void initView() {
+    @Override public void onContentChanged() {
+        super.onContentChanged();
+        new ToolbarWrapper(this);
         goodsPager.addOnPageChangeListener(this);
     }
 
@@ -85,7 +84,7 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_share) {
-            Toast.makeText(this, R.string.share, Toast.LENGTH_SHORT).show();
+            ToastWrapper.show(R.string.share);
             return true;
         }
         return super.onOptionsItemSelected(item);

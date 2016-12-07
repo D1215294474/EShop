@@ -9,17 +9,15 @@
         android:layout_height="wrap_content"
         android:src="@drawable/minus"/>
 
-    <EditText
-        android:id="@+id/edit_number"
+    <TextView
+        android:id="@+id/text_number"
         android:layout_width="@dimen/size_45"
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/image_minus"
         android:layout_alignTop="@id/image_minus"
         android:layout_toRightOf="@id/image_minus"
         android:background="@drawable/number"
-        android:cursorVisible="false"
         android:gravity="center"
-        android:inputType="number"
         android:lines="1"
         android:text="1"
         android:textAppearance="@style/ContentText.FixedSmall"
@@ -29,6 +27,6 @@
         android:id="@+id/image_plus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/edit_number"
+        android:layout_toRightOf="@id/text_number"
         android:src="@drawable/plus"/>
 </merge>

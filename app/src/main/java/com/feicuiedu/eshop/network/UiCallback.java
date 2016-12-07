@@ -4,28 +4,26 @@ package com.feicuiedu.eshop.network;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.utils.LogUtils;
+import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * @param <T> 响应体的实体类型.
- */
 public abstract class UiCallback<T extends ResponseEntity> implements Callback {
 
 
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     private Context mContext;
+
+    private Class<T> mResponseType;
 
     public UiCallback(Context context) {
         mContext = context.getApplicationContext();
@@ -54,10 +52,8 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
      * {@code response}依然可能是一个失败的响应码, 例如404或500.
      */
     @Override public final void onResponse(Call call, Response response) throws IOException {
-        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-        //noinspection unchecked
-        Class<T> entityClass = (Class<T>) type.getActualTypeArguments()[0];
-        final T responseEntity = EShopClient.getInstance().getResponseEntity(response, entityClass);
+        final T responseEntity = EShopClient.getInstance()
+                .getResponseEntity(response, mResponseType);
 
         HANDLER.post(new Runnable() {
             @Override public void run() {
@@ -68,7 +64,7 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
 
     public final void onFailureInUi(IOException e) {
         LogUtils.error("onFailureInUi", e);
-        Toast.makeText(mContext, R.string.error_network, Toast.LENGTH_SHORT).show();
+        ToastWrapper.show(R.string.error_network);
         onBusinessResponse(false, null);
     }
 
@@ -81,11 +77,14 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
         if (responseEntity.getStatus().isSucceed()) {
             onBusinessResponse(true, responseEntity);
         } else {
-            Toast.makeText(mContext, responseEntity.getStatus().getErrorDesc(), Toast.LENGTH_SHORT)
-                    .show();
+            ToastWrapper.show(responseEntity.getStatus().getErrorDesc());
             onBusinessResponse(false, null);
         }
     }
 
-    public abstract void onBusinessResponse(boolean success, T responseEntity);
+    public void setResponseType(Class<T> responseType) {
+        mResponseType = responseType;
+    }
+
+    public abstract  void onBusinessResponse(boolean success, T responseEntity);
 }

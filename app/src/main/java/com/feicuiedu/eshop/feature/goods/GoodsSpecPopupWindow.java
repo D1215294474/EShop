@@ -13,12 +13,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
 import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.base.widgets.SimpleNumberPicker;
+import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.feature.mine.SignInActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.UserManager;
@@ -75,7 +75,7 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
         int number = numberPicker.getNumber();
 
         if (number == 0) {
-            Toast.makeText(mActivity, R.string.please_choose_number, Toast.LENGTH_SHORT).show();
+            ToastWrapper.show(R.string.please_choose_number);
             return;
         }
 
@@ -90,8 +90,8 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
             @Override
             public void onBusinessResponse(boolean success, ApiCartCreate.Rsp responseEntity) {
                 if (success) {
-                    Toast.makeText(mActivity, R.string.add_to_cart_succeed, Toast.LENGTH_SHORT)
-                            .show();
+                    UserManager.getInstance().updateCart(mActivity);
+                    ToastWrapper.show(R.string.add_to_cart_succeed);
                     dismiss();
                 }
             }

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         app:elevation="@dimen/elevation_app_bar">
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@id/standard_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_45"
             android:background="@color/colorPrimary"
@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <in.srain.cube.views.ptr.PtrFrameLayout
-        android:id="@+id/layout_refresh"
+        android:id="@id/standard_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

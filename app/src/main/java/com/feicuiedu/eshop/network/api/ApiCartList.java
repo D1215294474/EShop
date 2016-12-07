@@ -7,33 +7,33 @@ import com.feicuiedu.eshop.network.ApiInterface;
 import com.feicuiedu.eshop.network.RequestParam;
 import com.feicuiedu.eshop.network.ResponseEntity;
 import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.entity.CartBill;
+import com.feicuiedu.eshop.network.entity.CartGoods;
 import com.feicuiedu.eshop.network.entity.Session;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * 服务器接口: 添加到购物车.
+ * 服务器接口: 购物车列表.
  */
-public class ApiCartCreate implements ApiInterface {
+public class ApiCartList implements ApiInterface {
 
     private Req mReq;
 
-    public ApiCartCreate(int goodsId, int number) {
-        mReq = new Req();
-
+    public ApiCartList() {
         Session session = UserManager.getInstance().getSession();
+
         if (session == null) {
-            throw new IllegalStateException("ApiCartCreate need a session.");
+            throw new IllegalStateException("ApiCartList need a session.");
         }
 
+        mReq = new Req();
         mReq.mSession = session;
-        mReq.mId = goodsId;
-        mReq.mNumber = number;
     }
 
     @NonNull @Override public String getPath() {
-        return "/cart/create";
+        return "/cart/list";
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -47,12 +47,29 @@ public class ApiCartCreate implements ApiInterface {
     public static class Req extends RequestParam {
 
         @SerializedName("session") private Session mSession;
-        @SerializedName("goods_id") private int mId;
-        @SerializedName("number") private int mNumber;
-        @SerializedName("spec") private List<Integer> mSpecs;
 
     }
 
     public static class Rsp extends ResponseEntity {
+
+        @SerializedName("data") Data mData;
+
+        public Data getData() {
+            return mData;
+        }
+
+        public static class Data {
+            @SerializedName("goods_list") private List<CartGoods> mGoodsList;
+
+            @SerializedName("total") private CartBill mCartBill;
+
+            public List<CartGoods> getGoodsList() {
+                return mGoodsList;
+            }
+
+            public CartBill getCartBill() {
+                return mCartBill;
+            }
+        }
     }
 }

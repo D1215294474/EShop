@@ -23,7 +23,8 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
         setContentView(R.layout.activity_splash);
     }
 
-    @Override public void initView() {
+    @Override public void onContentChanged() {
+        super.onContentChanged();
         startSplashAnimation();
     }
 

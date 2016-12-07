@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 服务器接口: 获取商品分类.
  */
-public class ApiCategory extends ApiInterface<ApiCategory.Rsp> {
+public class ApiCategory implements ApiInterface {
 
     @NonNull
     @Override public String getPath() {
@@ -24,6 +24,10 @@ public class ApiCategory extends ApiInterface<ApiCategory.Rsp> {
     @Nullable
     @Override public RequestParam getRequestParam() {
         return null;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
     public static class Rsp extends ResponseEntity {

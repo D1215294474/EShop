@@ -33,6 +33,9 @@
     <string name="sign_in">登录</string>
     <string name="sign_up">注册</string>
     <string name="ok">确认</string>
+    <string name="cancel">取消</string>
+
+    <string name="confirm_delete_goods">是否要删除此商品</string>
 
     <string name="number">数量</string>
 
@@ -44,9 +47,12 @@
 
     <string name="inventory">库存</string>
 
+    <string name="please_sign_in_first">请先登录</string>
+
     <string name="title_home">首&#160;&#160;页</string>
     <string name="title_category">分&#160;&#160;类</string>
     <string name="title_sign_in">登&#160;&#160;录</string>
     <string name="title_sign_up">注&#160;&#160;册</string>
+    <string name="title_shopping_cart">购物车</string>
     <string name="error_network">网络错误, 请检查网络设置</string>
 </resources>

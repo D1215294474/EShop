@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 服务器接口: 搜索商品.
  */
-public class ApiSearch extends ApiInterface<ApiSearch.Rsp> {
+public class ApiSearch implements ApiInterface {
 
     private Req mReq;
 
@@ -35,6 +35,10 @@ public class ApiSearch extends ApiInterface<ApiSearch.Rsp> {
     @Nullable
     @Override public RequestParam getRequestParam() {
         return mReq;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
 

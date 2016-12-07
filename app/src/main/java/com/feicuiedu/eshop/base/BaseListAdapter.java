@@ -2,6 +2,7 @@ package com.feicuiedu.eshop.base;
 
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import butterknife.ButterKnife;
 
 /**
  * 简单列表适配器基类.
+ *
  * @param <T> 数据实体的类型.
  * @param <V> ViewHolder的类型.
  */
@@ -45,14 +47,14 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
         return itemView;
     }
 
-    public void reset(List<T> data) {
+    public void reset(@Nullable List<T> data) {
         mDataSet.clear();
-        mDataSet.addAll(data);
+        if (data != null) mDataSet.addAll(data);
         notifyDataSetChanged();
     }
 
-    public void addAll(List<T> data) {
-        mDataSet.addAll(data);
+    public void addAll(@Nullable List<T> data) {
+        if (data != null) mDataSet.addAll(data);
         notifyDataSetChanged();
     }
 
@@ -74,6 +76,7 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
     public abstract static class ViewHolder {
 
         public final View itemView;
+
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
             this.itemView = itemView;

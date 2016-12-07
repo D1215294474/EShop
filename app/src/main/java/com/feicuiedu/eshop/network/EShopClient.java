@@ -3,7 +3,6 @@ package com.feicuiedu.eshop.network;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -59,14 +58,12 @@ public class EShopClient {
      * @return 响应数据实体.
      * @throws IOException 请求被取消, 连接超时, 失败的响应码等等.
      */
-    public <T extends ResponseEntity> T execute(ApiInterface<T> apiInterface)
+    public <T extends ResponseEntity> T execute(ApiInterface apiInterface)
             throws IOException {
 
         Response response = newApiCall(apiInterface, null).execute();
-        ParameterizedType type = (ParameterizedType)
-                (apiInterface.getClass().getGenericSuperclass());
         //noinspection unchecked
-        Class<T> entityClass = (Class<T>) type.getActualTypeArguments()[0];
+        Class<T> entityClass = (Class<T>) apiInterface.getResponseType();
         return getResponseEntity(response, entityClass);
     }
 
@@ -75,13 +72,14 @@ public class EShopClient {
      *
      * @param apiInterface 服务器Api接口.
      * @param uiCallback   回调
-     * @param <T>          响应体的实体类型.
      * @return {@link Call}对象.
      */
-    public <T extends ResponseEntity> Call enqueue(ApiInterface<T> apiInterface,
-                                                   UiCallback<T> uiCallback,
-                                                   String tag) {
+    public Call enqueue(ApiInterface apiInterface,
+                        UiCallback uiCallback,
+                        String tag) {
         Call call = newApiCall(apiInterface, tag);
+        //noinspection unchecked
+        uiCallback.setResponseType(apiInterface.getResponseType());
         call.enqueue(uiCallback);
         return call;
     }

@@ -59,11 +59,9 @@ public class GoodsInfoFragment extends BaseFragment {
                 GoodsInfo.class);
     }
 
-    @Override protected int getContentViewLayout() {
-        return R.layout.fragment_goods_info;
-    }
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override protected void initView() {
         // 设置显示商品图片的ViewPager
         GoodsPictureAdapter adapter = new GoodsPictureAdapter(mGoodsInfo.getPictures());
         picturesPager.setAdapter(adapter);
@@ -80,6 +78,10 @@ public class GoodsInfoFragment extends BaseFragment {
         spannableString.setSpan(
                 new StrikethroughSpan(), 0, marketPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvMarketPrice.setText(spannableString);
+    }
+
+    @Override protected int getContentViewLayout() {
+        return R.layout.fragment_goods_info;
     }
 
     @OnClick(R.id.text_goods_comments)

@@ -2,6 +2,8 @@ package com.feicuiedu.eshop.feature.mine;
 
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
@@ -23,7 +25,8 @@ public class MineFragment extends BaseFragment {
         return R.layout.fragment_mine;
     }
 
-    @Override protected void initView() {
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setUser();
     }
 

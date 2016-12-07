@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 服务器接口: 轮播图和促销商品.
  */
-public class ApiHomeBanner extends ApiInterface<ApiHomeBanner.Rsp> {
+public class ApiHomeBanner implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
@@ -24,6 +24,10 @@ public class ApiHomeBanner extends ApiInterface<ApiHomeBanner.Rsp> {
 
     @Nullable @Override public RequestParam getRequestParam() {
         return null;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
     public static class Rsp extends ResponseEntity {

@@ -14,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * 获取商品详情.
  */
-public class ApiGoodsInfo extends ApiInterface<ApiGoodsInfo.Rsp> {
+public class ApiGoodsInfo implements ApiInterface {
 
     private final Req mReq;
 
@@ -30,6 +30,10 @@ public class ApiGoodsInfo extends ApiInterface<ApiGoodsInfo.Rsp> {
 
     @Nullable @Override public RequestParam getRequestParam() {
         return mReq;
+    }
+
+    @NonNull @Override public Class<? extends ResponseEntity> getResponseType() {
+        return Rsp.class;
     }
 
     private static class Req extends RequestParam {

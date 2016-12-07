@@ -14,9 +14,11 @@ import android.widget.TextView;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.glide.GlideUtils;
+import com.feicuiedu.eshop.base.glide.MaskTransformation;
 import com.feicuiedu.eshop.base.widgets.banner.BannerAdapter;
 import com.feicuiedu.eshop.base.widgets.banner.BannerLayout;
-import com.feicuiedu.eshop.base.glide.MaskTransformation;
+import com.feicuiedu.eshop.base.wrapper.PtrWrapper;
+import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiHomeBanner;
@@ -50,11 +52,11 @@ public class HomeFragment extends BaseFragment {
             R.drawable.round_yellow
     };
 
-    @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
     @BindView(R.id.list_home_goods) ListView goodsListView;
 
     private HomeGoodsAdapter mGoodsAdapter;
     private BannerAdapter<Banner> mBannerAdapter;
+    private PtrWrapper mPtrWrapper;
 
     private boolean mBannerRefreshed = false;
     private boolean mCategoryRefreshed = false;
@@ -77,8 +79,11 @@ public class HomeFragment extends BaseFragment {
         };
     }
 
-    @Override protected void initView() {
-        tvToolbarTitle.setText(R.string.title_home);
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+        new ToolbarWrapper(this).setCustomTitle(R.string.title_home);
         goodsListView.setAdapter(mGoodsAdapter);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -95,21 +100,24 @@ public class HomeFragment extends BaseFragment {
         mTvPromoteGoods = ButterKnife.findById(view, R.id.text_promote_goods);
 
         goodsListView.addHeaderView(view);
+
+        mPtrWrapper = new PtrWrapper(this) {
+            @Override public void onRefresh() {
+                mBannerRefreshed = false;
+                mCategoryRefreshed = false;
+
+                enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
+
+                enqueue(new ApiHomeCategory(), new CategoryCallback(getContext()));
+            }
+        };
+        mPtrWrapper.postRefresh(50);
     }
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_home;
     }
 
-    @Override protected void onRefresh() {
-
-        mBannerRefreshed = false;
-        mCategoryRefreshed = false;
-
-        enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
-
-        enqueue(new ApiHomeCategory(), new CategoryCallback(getContext()));
-    }
 
     private void setPromoteGoods(final List<SimpleGoods> simpleGoodsList) {
 
@@ -131,7 +139,7 @@ public class HomeFragment extends BaseFragment {
                 mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = GoodsActivity.getStartIntent(
-                                getContext(), simpleGoods);
+                                getContext(), simpleGoods.getId());
                         getActivity().startActivity(intent);
                     }
                 });
@@ -155,7 +163,7 @@ public class HomeFragment extends BaseFragment {
 
             mBannerRefreshed = true;
             if (mCategoryRefreshed) {
-                stopRefresh();
+                mPtrWrapper.stopRefresh();
             }
 
             if (success) {
@@ -179,7 +187,7 @@ public class HomeFragment extends BaseFragment {
 
             mCategoryRefreshed = true;
             if (mBannerRefreshed) {
-                stopRefresh();
+                mPtrWrapper.stopRefresh();
             }
 
             if (success) {

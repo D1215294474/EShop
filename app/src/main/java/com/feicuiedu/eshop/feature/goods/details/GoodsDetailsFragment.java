@@ -9,8 +9,4 @@ public class GoodsDetailsFragment extends BaseFragment {
         return R.layout.fragment_goods_details;
     }
 
-    @Override protected void initView() {
-
-    }
-
 }

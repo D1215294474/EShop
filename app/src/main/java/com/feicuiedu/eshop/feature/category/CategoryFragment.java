@@ -8,10 +8,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
+import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.search.SearchGoodsActivity;
 import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiCategory;
@@ -25,8 +25,6 @@ import butterknife.OnItemClick;
  */
 public class CategoryFragment extends BaseFragment {
 
-
-    @BindView(R.id.text_toolbar_title) TextView tvToolbarTitle; // ActionBar标题
     @BindView(R.id.list_category) ListView categoryListView;
     @BindView(R.id.list_children) ListView childrenListView;
 
@@ -47,6 +45,17 @@ public class CategoryFragment extends BaseFragment {
         mChildrenAdapter = new ChildrenAdapter();
 
         getCategories();
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        new ToolbarWrapper(this)
+                .setShowBack(false)
+                .setShowTitle(false)
+                .setCustomTitle(R.string.title_category);
+        categoryListView.setAdapter(mCategoryAdapter);
+        childrenListView.setAdapter(mChildrenAdapter);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -75,12 +84,6 @@ public class CategoryFragment extends BaseFragment {
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_category;
-    }
-
-    @Override protected void initView() {
-        tvToolbarTitle.setText(R.string.title_category);
-        categoryListView.setAdapter(mCategoryAdapter);
-        childrenListView.setAdapter(mChildrenAdapter);
     }
 
     @OnItemClick(R.id.list_category)

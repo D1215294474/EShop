@@ -1,7 +1,8 @@
-package com.feicuiedu.eshop.base.widgets;
+package com.feicuiedu.eshop.base.wrapper;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.feicuiedu.eshop.R;
+import com.feicuiedu.eshop.base.BaseActivity;
+import com.feicuiedu.eshop.base.BaseFragment;
 
-public class ProgressDialogFragment extends DialogFragment {
+public class ProgressWrapper extends DialogFragment {
 
-    public ProgressDialogFragment() {
+    public ProgressWrapper() {
         // Empty constructor required for DialogFragment
     }
 
@@ -51,5 +55,28 @@ public class ProgressDialogFragment extends DialogFragment {
         windowParams.dimAmount = 0.0f; // 背景透明度: 全透明
 
         window.setAttributes(windowParams);
+    }
+
+    public void showProgress(BaseActivity activity) {
+
+        if (isAdded()) return;
+
+        InputMethodManager imm =
+                (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+
+        show(activity.getSupportFragmentManager(), "ProgressWrapper");
+    }
+
+
+    public void showProgress(BaseFragment fragment) {
+
+        if (isAdded()) return;
+
+        show(fragment.getChildFragmentManager(), "ProgressWrapper");
+    }
+
+    public void dismissProgress() {
+        if (isAdded()) dismiss();
     }
 }
