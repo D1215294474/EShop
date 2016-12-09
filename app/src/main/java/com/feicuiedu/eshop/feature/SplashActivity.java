@@ -2,11 +2,11 @@ package com.feicuiedu.eshop.feature;
 
 import android.animation.Animator;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 
 import butterknife.BindView;
 
@@ -18,32 +18,11 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
 
     @BindView(R.id.image_splash) ImageView ivSplash;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+    @Override protected int getContentViewLayout() {
+        return R.layout.activity_splash;
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
-        startSplashAnimation();
-    }
-
-    @Override public void onAnimationStart(Animator animation) {
-    }
-
-    @Override public void onAnimationEnd(Animator animation) {
-        Intent intent = new Intent(this, EShopHomeActivity.class);
-        startActivity(intent);
-        finishWithDefaultTransition();
-    }
-
-    @Override public void onAnimationCancel(Animator animation) {
-    }
-
-    @Override public void onAnimationRepeat(Animator animation) {
-    }
-
-    private void startSplashAnimation() {
+    @Override protected void initView() {
         // 渐变动画
         ivSplash.setAlpha(0.3f);
         ivSplash.animate()
@@ -53,5 +32,22 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
                 .start();
     }
 
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+    }
 
+    @Override public void onAnimationEnd(Animator animation) {
+        Intent intent = new Intent(this, EShopHomeActivity.class);
+        startActivity(intent);
+        finishWithDefaultTransition();
+    }
+
+    @Override public void onAnimationStart(Animator animation) {
+    }
+
+    @Override public void onAnimationCancel(Animator animation) {
+    }
+
+    @Override public void onAnimationRepeat(Animator animation) {
+    }
 }

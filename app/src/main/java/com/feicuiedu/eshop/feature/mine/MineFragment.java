@@ -2,14 +2,16 @@ package com.feicuiedu.eshop.feature.mine;
 
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
+import com.feicuiedu.eshop.feature.address.manage.ManageAddressActivity;
 import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.User;
+import com.feicuiedu.eshop.network.event.UserEvent;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,29 +21,27 @@ import butterknife.OnClick;
  */
 public class MineFragment extends BaseFragment {
 
+    public static MineFragment newInstance() {
+        return new MineFragment();
+    }
+
     @BindView(R.id.text_username) TextView tvName;
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_mine;
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setUser();
+    @Override protected void initView() {
+
     }
 
-    @Override public void onEvent(UserManager.UpdateUserEvent event) {
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+
+    }
+
+    @Override public void onEvent(UserEvent event) {
         super.onEvent(event);
-        setUser();
-    }
-
-    @OnClick(R.id.text_username)
-    public void onClick() {
-        Intent intent = new Intent(getContext(), SignInActivity.class);
-        getActivity().startActivity(intent);
-    }
-
-    private void setUser() {
         User user = UserManager.getInstance().getUser();
 
         if (user == null) {
@@ -49,6 +49,31 @@ public class MineFragment extends BaseFragment {
         } else {
             tvName.setText(user.getName());
         }
+    }
+
+    @OnClick({R.id.text_username, R.id.text_manage_address}) void onClick(View view) {
+
+        if (!UserManager.getInstance().hasUser()) {
+            Intent intent = new Intent(getContext(), SignInActivity.class);
+            getActivity().startActivity(intent);
+            return;
+        }
+
+        switch (view.getId()) {
+            case R.id.text_username:
+                break;
+            case R.id.text_manage_address:
+                Intent intent = new Intent(getContext(), ManageAddressActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                throw new UnsupportedOperationException();
+        }
+
+    }
+
+    @OnClick(R.id.button_setting) void navigateToSettings() {
+        UserManager.getInstance().clear();
     }
 
 }

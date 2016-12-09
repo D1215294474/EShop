@@ -11,5 +11,20 @@
 
         <include layout="@layout/partial_mine_top"/>
 
+
+        <TextView
+            android:id="@+id/text_manage_address"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_54"
+            android:layout_marginTop="1dp"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/ic_address"
+            android:drawablePadding="@dimen/spacing_small"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:gravity="center_vertical"
+            android:padding="@dimen/spacing_small"
+            android:text="@string/title_manage_address"
+            android:textAppearance="@style/ContentText.Large"/>
+
     </LinearLayout>
 </ScrollView>

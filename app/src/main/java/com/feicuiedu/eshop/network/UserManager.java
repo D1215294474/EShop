@@ -1,28 +1,37 @@
 package com.feicuiedu.eshop.network;
 
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.feicuiedu.eshop.network.api.ApiAddressList;
 import com.feicuiedu.eshop.network.api.ApiCartList;
+import com.feicuiedu.eshop.network.core.IUserManager;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.core.UiCallback;
+import com.feicuiedu.eshop.network.entity.Address;
 import com.feicuiedu.eshop.network.entity.CartBill;
 import com.feicuiedu.eshop.network.entity.CartGoods;
 import com.feicuiedu.eshop.network.entity.Session;
 import com.feicuiedu.eshop.network.entity.User;
+import com.feicuiedu.eshop.network.event.AddressEvent;
+import com.feicuiedu.eshop.network.event.CartEvent;
+import com.feicuiedu.eshop.network.event.UserEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import okhttp3.Call;
+public class UserManager implements IUserManager {
 
-public class UserManager {
+    private static IUserManager sInstance = new UserManager();
 
-    private static UserManager sInstance = new UserManager();
-
-    public static UserManager getInstance() {
+    public static IUserManager getInstance() {
         return sInstance;
     }
+
+    private EShopClient mClient = EShopClient.getInstance();
+
+    private EventBus mBus = EventBus.getDefault();
 
     private Session mSession;
 
@@ -32,70 +41,103 @@ public class UserManager {
 
     private CartBill mCartBill;
 
-    private Call mCartCall;
+    private List<Address> mAddressList;
 
-    public void signIn(@NonNull Session session,
-                       @NonNull User user) {
-        mSession = session;
+    @Override public void setUser(@NonNull User user, @NonNull Session session) {
         mUser = user;
+        mSession = session;
 
-        EventBus.getDefault().post(new UpdateUserEvent());
+        mBus.postSticky(new UserEvent());
+        retrieveCartList();
+        retrieveAddressList();
     }
 
-
-    public boolean isSignIn() {
-        return mSession != null;
-    }
-
-    public void updateCart(Context context) {
-
-        if (mCartCall != null) return;
-
+    @Override public void retrieveCartList() {
         ApiCartList apiCartList = new ApiCartList();
-
-        Context app = context.getApplicationContext();
-        UiCallback<ApiCartList.Rsp> cb = new UiCallback<ApiCartList.Rsp>(app) {
+        UiCallback cb = new UiCallback() {
             @Override
-            public void onBusinessResponse(boolean success, ApiCartList.Rsp responseEntity) {
-                mCartCall = null;
+            public void onBusinessResponse(boolean success, ResponseEntity rsp) {
 
                 if (success) {
-                    mCartGoodsList = responseEntity.getData().getGoodsList();
-                    mCartBill = responseEntity.getData().getCartBill();
+                    ApiCartList.Rsp listRsp = (ApiCartList.Rsp) rsp;
+                    mCartGoodsList = listRsp.getData().getGoodsList();
+                    mCartBill = listRsp.getData().getCartBill();
                 }
 
-                EventBus.getDefault().post(new UpdateCartEvent(success));
+                mBus.postSticky(new CartEvent());
             }
         };
 
-        mCartCall = EShopClient.getInstance().enqueue(apiCartList, cb, null);
+        mClient.enqueue(apiCartList, cb, null);
     }
 
-    public Session getSession() {
+    @Override public void retrieveAddressList() {
+        ApiAddressList apiAddressList = new ApiAddressList();
+        UiCallback uiCallback = new UiCallback() {
+            @Override
+            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
+                if (success) {
+                    ApiAddressList.Rsp listRsp = (ApiAddressList.Rsp) responseEntity;
+                    mAddressList = listRsp.getData();
+                }
+                mBus.postSticky(new AddressEvent());
+            }
+        };
+        mClient.enqueue(apiAddressList, uiCallback, getClass().getSimpleName());
+    }
+
+    @Override public Address getDefaultAddress() {
+        if (hasAddress()) {
+            for (Address address : mAddressList) {
+                if (address.isDefault()) return address;
+            }
+        }
+        return null;
+    }
+
+    @Override public void clear() {
+        mUser = null;
+        mSession = null;
+        mCartBill = null;
+        mCartGoodsList = null;
+
+        mClient.cancelByTag(getClass().getSimpleName());
+
+        mBus.postSticky(new UserEvent());
+        mBus.postSticky(new CartEvent());
+        mBus.postSticky(new AddressEvent());
+    }
+
+    @Override public boolean hasUser() {
+        return mSession != null && mUser != null;
+    }
+
+    @Override public boolean hasCart() {
+        return mCartGoodsList != null && !mCartGoodsList.isEmpty();
+    }
+
+    @Override public boolean hasAddress() {
+        return mAddressList != null && !mAddressList.isEmpty();
+    }
+
+    @Override public Session getSession() {
         return mSession;
     }
 
-    public User getUser() {
+    @Override public User getUser() {
         return mUser;
     }
 
-    public List<CartGoods> getCartGoodsList() {
+    @Override public List<CartGoods> getCartGoodsList() {
         return mCartGoodsList;
     }
 
-    public CartBill getCartBill() {
+    @Override public CartBill getCartBill() {
         return mCartBill;
     }
 
-    public static class UpdateUserEvent {
+    @Override public List<Address> getAddressList() {
+        return mAddressList;
     }
 
-    public static class UpdateCartEvent {
-
-        public final boolean success;
-
-        public UpdateCartEvent(boolean success) {
-            this.success = success;
-        }
-    }
 }

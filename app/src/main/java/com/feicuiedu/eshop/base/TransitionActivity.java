@@ -3,10 +3,22 @@ package com.feicuiedu.eshop.base;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.feicuiedu.eshop.R;
 
 public abstract class TransitionActivity extends AppCompatActivity {
+
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override public void startActivity(Intent intent) {
         super.startActivity(intent);

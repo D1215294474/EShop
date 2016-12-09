@@ -12,6 +12,8 @@ import com.feicuiedu.eshop.feature.cart.CartFragment;
 import com.feicuiedu.eshop.feature.category.CategoryFragment;
 import com.feicuiedu.eshop.feature.home.HomeFragment;
 import com.feicuiedu.eshop.feature.mine.MineFragment;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.event.CartEvent;
 import com.feicuiedu.eshop.network.UserManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -43,36 +45,43 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) { // “内存重启”时调用
             // 注意必须在bottomBar.setOnTabSelectListener之前调用, 否则会出现Fragment重叠
             retrieveFragments();
         }
-        setContentView(R.layout.activity_eshop_home);
+        super.onCreate(savedInstanceState);
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
+    @Override protected int getContentViewLayout() {
+        return R.layout.activity_eshop_home;
+    }
+
+    @Override protected void initView() {
         bottomBar.setOnTabSelectListener(this);
+    }
+
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+
     }
 
     @Override public void onTabSelected(@IdRes int tabId) {
         switch (tabId) {
             case R.id.tab_home:
-                if (mHomeFragment == null) mHomeFragment = new HomeFragment();
+                if (mHomeFragment == null) mHomeFragment = HomeFragment.newInstance();
                 switchFragment(mHomeFragment);
                 break;
             case R.id.tab_category:
-                if (mCategoryFragment == null) mCategoryFragment = new CategoryFragment();
+                if (mCategoryFragment == null) mCategoryFragment = CategoryFragment.newInstance();
                 switchFragment(mCategoryFragment);
                 break;
             case R.id.tab_cart:
-                if (mCartFragment == null) mCartFragment = new CartFragment();
+                if (mCartFragment == null) mCartFragment = CartFragment.newInstance();
                 switchFragment(mCartFragment);
                 break;
             case R.id.tab_mine:
-                if (mMineFragment == null) mMineFragment = new MineFragment();
+                if (mMineFragment == null) mMineFragment = MineFragment.newInstance();
                 switchFragment(mMineFragment);
                 break;
             default:
@@ -91,10 +100,16 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
         moveTaskToBack(true);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(UserManager.UpdateCartEvent event) {
-        int total = UserManager.getInstance().getCartBill().getGoodsCount();
-        bottomBar.getTabAtPosition(2).setBadgeCount(total);
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(CartEvent event) {
+
+        if (UserManager.getInstance().hasCart()) {
+            int total = UserManager.getInstance().getCartBill().getGoodsCount();
+            bottomBar.getTabAtPosition(2).setBadgeCount(total);
+        } else {
+            bottomBar.getTabAtPosition(2).removeBadge();
+        }
+
     }
 
 

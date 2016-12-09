@@ -1,8 +1,6 @@
 package com.feicuiedu.eshop.feature.mine;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +9,12 @@ import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
 import com.feicuiedu.eshop.base.utils.Sha256Utils;
 import com.feicuiedu.eshop.base.wrapper.ProgressWrapper;
+import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
-import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiSignIn;
-import com.feicuiedu.eshop.network.entity.Session;
-import com.feicuiedu.eshop.network.entity.User;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,62 +27,59 @@ public class SignInActivity extends BaseActivity {
 
     @BindView(R.id.edit_name) EditText etName;
     @BindView(R.id.edit_password) EditText etPassword;
-
     @BindView(R.id.button_signin) Button btnSignIn;
 
-    private ProgressWrapper mProgressWrapper = new ProgressWrapper();
+    private ProgressWrapper mProgressWrapper;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+    private String mUsername;
+    private String mPassword;
+
+    @Override protected int getContentViewLayout() {
+        return R.layout.activity_sign_in;
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
+    @Override protected void initView() {
         new ToolbarWrapper(this).setCustomTitle(R.string.title_sign_in);
+        mProgressWrapper = new ProgressWrapper();
     }
 
-    @OnTextChanged({R.id.edit_password, R.id.edit_name})
-    public void onTextChanged() {
-        String username = etName.getText().toString();
-        String password = etPassword.getText().toString();
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+        if (!ApiConst.PATH_USER_SIGNIN.equals(apiPath)) {
+            throw new UnsupportedOperationException(apiPath);
+        }
 
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+        mProgressWrapper.dismissProgress();
+        if (success) {
+            ToastWrapper.show(R.string.sign_in_success);
+            ApiSignIn.Rsp signInRsp = (ApiSignIn.Rsp) rsp;
+            UserManager.getInstance().setUser(
+                    signInRsp.getData().getUser(), signInRsp.getData().getSession()
+            );
+            finish();
+        }
+    }
+
+    @OnTextChanged({R.id.edit_password, R.id.edit_name}) void onTextChanged() {
+        mUsername = etName.getText().toString();
+        mPassword = etPassword.getText().toString();
+
+        // 简单的条件判断: 用户名和密码不能为空.
+        if (TextUtils.isEmpty(mUsername) || TextUtils.isEmpty(mPassword)) {
             btnSignIn.setEnabled(false);
         } else {
             btnSignIn.setEnabled(true);
         }
     }
 
-    @OnClick(R.id.button_signin)
-    public void signIn() {
-        String username = etName.getText().toString();
-        String password = etPassword.getText().toString();
-
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-            throw new IllegalStateException("Username or Password is empty.");
-        }
-
-        ApiSignIn apiSignIn = new ApiSignIn(username, Sha256Utils.bin2hex(password));
-
+    @OnClick(R.id.button_signin) void signIn() {
         mProgressWrapper.showProgress(this);
-        enqueue(apiSignIn, new UiCallback<ApiSignIn.Rsp>(this) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiSignIn.Rsp responseEntity) {
-                mProgressWrapper.dismiss();
-                if (success) {
-                    Session session = responseEntity.getData().getSession();
-                    User user = responseEntity.getData().getUser();
-                    UserManager.getInstance().signIn(session, user);
-                    UserManager.getInstance().updateCart(SignInActivity.this);
-                    finish();
-                }
-            }
-        });
+        ApiSignIn apiSignIn = new ApiSignIn(mUsername, Sha256Utils.bin2hex(mPassword));
+        enqueue(apiSignIn);
     }
 
-    @OnClick(R.id.text_signup)
-    public void navigateToSignUp() {
+    @OnClick(R.id.text_signup) void navigateToSignUp() {
+        // 跳转到注册页面.
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
         finishWithDefaultTransition();

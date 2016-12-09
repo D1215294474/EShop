@@ -1,13 +1,13 @@
-package com.feicuiedu.eshop.network;
+package com.feicuiedu.eshop.network.core;
 
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.utils.LogUtils;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
+import com.feicuiedu.eshop.network.EShopClient;
 
 import java.io.IOException;
 
@@ -16,17 +16,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public abstract class UiCallback<T extends ResponseEntity> implements Callback {
+public abstract class UiCallback implements Callback {
 
 
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    private Context mContext;
+    private Class<? extends ResponseEntity> mResponseType;
 
-    private Class<T> mResponseType;
-
-    public UiCallback(Context context) {
-        mContext = context.getApplicationContext();
+    public UiCallback() {
     }
 
     /**
@@ -52,7 +49,7 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
      * {@code response}依然可能是一个失败的响应码, 例如404或500.
      */
     @Override public final void onResponse(Call call, Response response) throws IOException {
-        final T responseEntity = EShopClient.getInstance()
+        final ResponseEntity responseEntity = EShopClient.getInstance()
                 .getResponseEntity(response, mResponseType);
 
         HANDLER.post(new Runnable() {
@@ -68,7 +65,7 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
         onBusinessResponse(false, null);
     }
 
-    public final void onResponseInUi(T responseEntity) {
+    public final void onResponseInUi(ResponseEntity responseEntity) {
 
         if (responseEntity == null || responseEntity.getStatus() == null) {
             throw new RuntimeException("Fatal Api Error!");
@@ -82,9 +79,9 @@ public abstract class UiCallback<T extends ResponseEntity> implements Callback {
         }
     }
 
-    public void setResponseType(Class<T> responseType) {
+    public void setResponseType(Class<? extends ResponseEntity> responseType) {
         mResponseType = responseType;
     }
 
-    public abstract  void onBusinessResponse(boolean success, T responseEntity);
+    public abstract void onBusinessResponse(boolean success, ResponseEntity responseEntity);
 }

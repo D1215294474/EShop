@@ -4,8 +4,6 @@ package com.feicuiedu.eshop.feature.goods;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -20,8 +18,9 @@ import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.comments.GoodsCommentsFragment;
 import com.feicuiedu.eshop.feature.goods.details.GoodsDetailsFragment;
 import com.feicuiedu.eshop.feature.goods.info.GoodsInfoFragment;
-import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 
 import java.util.List;
@@ -53,27 +52,36 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @BindViews({R.id.text_tab_goods, R.id.text_tab_details, R.id.text_tab_comments})
     List<TextView> tvTabList;
-
     @BindView(R.id.pager_goods) ViewPager goodsPager;
 
     private GoodsInfo mGoodsInfo;
-
     private GoodsSpecPopupWindow mGoodsSpecPopupWindow;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        int goodsId = getIntent().getIntExtra(EXTRA_GOODS_ID, 0);
-
-        setContentView(R.layout.activity_goods);
-        enqueue(new ApiGoodsInfo(goodsId),
-                new GoodsInfoCallback(this));
+    @Override protected int getContentViewLayout() {
+        return R.layout.activity_goods;
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
+    @Override protected void initView() {
         new ToolbarWrapper(this);
         goodsPager.addOnPageChangeListener(this);
+
+        // 获取商品信息.
+        int goodsId = getIntent().getIntExtra(EXTRA_GOODS_ID, 0);
+        enqueue(new ApiGoodsInfo(goodsId));
+    }
+
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+        if (!ApiConst.PATH_GOODS.equals(apiPath)) {
+            throw new UnsupportedOperationException(apiPath);
+        }
+
+        if (success) {
+            ApiGoodsInfo.Rsp goodsRsp = (ApiGoodsInfo.Rsp) rsp;
+            mGoodsInfo = goodsRsp.getData();
+            goodsPager.setAdapter(new GoodsPagerAdapter(getSupportFragmentManager(), mGoodsInfo));
+            chooseTab(0);
+        }
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,13 +98,6 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.text_tab_goods, R.id.text_tab_details, R.id.text_tab_comments})
-    public void onClickTab(TextView textView) {
-        int position = tvTabList.indexOf(textView);
-        goodsPager.setCurrentItem(position, false);
-        chooseTab(position);
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -108,8 +109,20 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @Override public void onPageScrollStateChanged(int state) {
     }
 
+    public void selectPage(int position) {
+        goodsPager.setCurrentItem(position, false);
+        chooseTab(position);
+    }
+
+    @OnClick({R.id.text_tab_goods, R.id.text_tab_details, R.id.text_tab_comments})
+    void onClickTab(TextView textView) {
+        int position = tvTabList.indexOf(textView);
+        goodsPager.setCurrentItem(position, false);
+        chooseTab(position);
+    }
+
     @OnClick({R.id.button_show_cart, R.id.button_add_cart, R.id.button_buy})
-    public void onClick(View view) {
+    void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_show_cart:
                 break;
@@ -130,11 +143,6 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         }
     }
 
-    public void selectPage(int position) {
-        goodsPager.setCurrentItem(position, false);
-        chooseTab(position);
-    }
-
 
     // 选择Tab标签, 注意此方法只改变Tab标签的UI效果, 不会改变ViewPager的位置.
     private void chooseTab(int position) {
@@ -144,22 +152,6 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
             float textSize = i == position ? res.getDimension(R.dimen.font_large) :
                     res.getDimension(R.dimen.font_normal);
             tvTabList.get(i).setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        }
-    }
-
-    private class GoodsInfoCallback extends UiCallback<ApiGoodsInfo.Rsp> {
-
-        public GoodsInfoCallback(Context context) {
-            super(context);
-        }
-
-        @Override public void onBusinessResponse(boolean success, ApiGoodsInfo.Rsp responseEntity) {
-            if (success) {
-                mGoodsInfo = responseEntity.getData();
-                goodsPager.setAdapter(new GoodsPagerAdapter(getSupportFragmentManager(),
-                        mGoodsInfo));
-                chooseTab(0);
-            }
         }
     }
 

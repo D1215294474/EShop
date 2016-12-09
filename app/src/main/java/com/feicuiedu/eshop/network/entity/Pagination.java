@@ -21,6 +21,10 @@ public class Pagination {
         return this;
     }
 
+    public boolean isFirst() {
+        return mPage == 1;
+    }
+
     public int getPage() {
         return mPage;
     }

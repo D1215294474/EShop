@@ -3,9 +3,10 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.ApiInterface;
-import com.feicuiedu.eshop.network.RequestParam;
-import com.feicuiedu.eshop.network.ResponseEntity;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.RequestParam;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 import com.feicuiedu.eshop.network.entity.Session;
@@ -20,12 +21,12 @@ public class ApiGoodsInfo implements ApiInterface {
 
     public ApiGoodsInfo(int goodsId) {
         mReq = new Req();
-        mReq.goodsId = goodsId;
+        mReq.mGoodsId = goodsId;
     }
 
 
     @NonNull @Override public String getPath() {
-        return "/goods";
+        return ApiConst.PATH_GOODS;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -39,10 +40,10 @@ public class ApiGoodsInfo implements ApiInterface {
     private static class Req extends RequestParam {
 
         @SerializedName("goods_id")
-        int goodsId;
+        private int mGoodsId;
 
         @SerializedName("session")
-        Session session = UserManager.getInstance().getSession();
+        private Session mSession = UserManager.getInstance().getSession();
     }
 
     public static class Rsp extends ResponseEntity {

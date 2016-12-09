@@ -1,4 +1,4 @@
-package com.feicuiedu.eshop.network;
+package com.feicuiedu.eshop.network.core;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

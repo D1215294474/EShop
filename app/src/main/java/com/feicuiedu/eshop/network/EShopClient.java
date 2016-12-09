@@ -1,5 +1,8 @@
 package com.feicuiedu.eshop.network;
 
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.core.UiCallback;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -100,7 +103,7 @@ public class EShopClient {
         mShowLog = showLog;
     }
 
-    <T extends ResponseEntity> T getResponseEntity(Response response, Class<T> clazz)
+    public <T extends ResponseEntity> T getResponseEntity(Response response, Class<T> clazz)
             throws IOException {
         if (!response.isSuccessful()) {
             throw new IOException("Response code is " + response.code());

@@ -9,10 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.feicuiedu.eshop.network.ApiInterface;
+import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.EShopClient;
-import com.feicuiedu.eshop.network.UiCallback;
-import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.core.UiCallback;
+import com.feicuiedu.eshop.network.event.UserEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,9 +24,7 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * <p>Fragment的统一基类. 实现了{@link ButterKnife}绑定和{@link Call}的取消.
- * <p>此Fragment必须在{@link BaseActivity}中使用.
- * <p>视图初始化请在{@link #onActivityCreated(Bundle)}中完成.
+ * 通用Fragment基类.
  */
 public abstract class BaseFragment extends Fragment {
 
@@ -39,36 +38,47 @@ public abstract class BaseFragment extends Fragment {
                                    @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getContentViewLayout(), container, false);
         mUnbinder = ButterKnife.bind(this, view);
-        EventBus.getDefault().register(this);
         return view;
     }
 
-    @Override public void onDestroyView() {
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView();
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override public final void onDestroyView() {
         super.onDestroyView();
+        EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
         EventBus.getDefault().unregister(this);
         mUnbinder.unbind();
         mUnbinder = null;
     }
 
-    @Override public void onDestroy() {
-        super.onDestroy();
-        EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
-    }
+    protected final Call enqueue(final ApiInterface apiInterface) {
+        UiCallback uiCallback = new UiCallback() {
+            @Override
+            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
+                BaseFragment.this.onBusinessResponse(
+                        apiInterface.getPath(),
+                        success,
+                        responseEntity);
+            }
+        };
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(UserManager.UpdateUserEvent event) {
-    }
-
-    protected Call enqueue(ApiInterface apiInterface,
-                           UiCallback uiCallback) {
         return EShopClient.getInstance()
                 .enqueue(apiInterface, uiCallback, getClass().getSimpleName());
     }
 
-    protected boolean isViewBind() {
-        return mUnbinder != null;
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(UserEvent event) {
     }
 
     @LayoutRes protected abstract int getContentViewLayout();
+
+    protected abstract void initView();
+
+    protected abstract void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp);
 
 }

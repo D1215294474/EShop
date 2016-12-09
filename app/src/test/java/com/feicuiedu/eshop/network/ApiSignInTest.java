@@ -13,8 +13,9 @@ public class ApiSignInTest extends ApiTest {
 
         ApiSignIn apiSignIn = new ApiSignIn("ycj", "123456");
         ApiSignIn.Rsp rsp = client.execute(apiSignIn);
-        UserManager.getInstance().signIn(rsp.getData().getSession(), rsp.getData().getUser());
+
         Assert.assertTrue(rsp.getStatus().isSucceed());
+        UserManager.getInstance().setUser(rsp.getData().getUser(), rsp.getData().getSession());
     }
 
 }

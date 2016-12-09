@@ -3,9 +3,10 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.ApiInterface;
-import com.feicuiedu.eshop.network.RequestParam;
-import com.feicuiedu.eshop.network.ResponseEntity;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.RequestParam;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.CategoryPrimary;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,7 +19,7 @@ public class ApiCategory implements ApiInterface {
 
     @NonNull
     @Override public String getPath() {
-        return "/category";
+        return ApiConst.PATH_CATEGORY;
     }
 
     @Nullable

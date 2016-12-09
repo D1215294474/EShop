@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.feicuiedu.eshop.base.glide.DefaultGlideModule"
-            android:value="GlideModule" />
+            android:value="GlideModule"/>
         <activity
             android:name=".feature.SplashActivity"
             android:screenOrientation="portrait">
@@ -36,6 +36,15 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".feature.mine.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.order.OrderPreviewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.address.edit.EditAddressActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.address.manage.ManageAddressActivity"
             android:screenOrientation="portrait"/>
     </application>
 

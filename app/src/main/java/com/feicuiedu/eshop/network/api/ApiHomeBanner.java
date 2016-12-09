@@ -3,9 +3,10 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.ApiInterface;
-import com.feicuiedu.eshop.network.RequestParam;
-import com.feicuiedu.eshop.network.ResponseEntity;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.RequestParam;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Banner;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
 import com.google.gson.annotations.SerializedName;
@@ -19,7 +20,7 @@ public class ApiHomeBanner implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
-        return "/home/data";
+        return ApiConst.PATH_HOME_DATA;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {

@@ -2,8 +2,6 @@ package com.feicuiedu.eshop.feature.category;
 
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,9 +11,13 @@ import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.search.SearchGoodsActivity;
-import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiCategory;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.entity.CategoryPrimary;
 import com.feicuiedu.eshop.network.entity.Filter;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnItemClick;
@@ -25,37 +27,53 @@ import butterknife.OnItemClick;
  */
 public class CategoryFragment extends BaseFragment {
 
+    public static CategoryFragment newInstance() {
+        return new CategoryFragment();
+    }
+
     @BindView(R.id.list_category) ListView categoryListView;
     @BindView(R.id.list_children) ListView childrenListView;
 
     private CategoryAdapter mCategoryAdapter;
     private ChildrenAdapter mChildrenAdapter;
 
-    private boolean mLoadSuccess;
+    private List<CategoryPrimary> mData;
 
-    public CategoryFragment() {
-        // Required empty public constructor
+    @Override protected int getContentViewLayout() {
+        return R.layout.fragment_category;
     }
 
-
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mCategoryAdapter = new CategoryAdapter();
-        mChildrenAdapter = new ChildrenAdapter();
-
-        getCategories();
-    }
-
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override protected void initView() {
 
         new ToolbarWrapper(this)
                 .setShowBack(false)
                 .setShowTitle(false)
                 .setCustomTitle(R.string.title_category);
+
+        mCategoryAdapter = new CategoryAdapter();
         categoryListView.setAdapter(mCategoryAdapter);
+
+        mChildrenAdapter = new ChildrenAdapter();
         childrenListView.setAdapter(mChildrenAdapter);
+
+        if (mData != null) {
+            updateCategory();
+        } else {
+            enqueue(new ApiCategory());
+        }
+    }
+
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+        if (!ApiConst.PATH_CATEGORY.equals(apiPath)) {
+            throw new UnsupportedOperationException(apiPath);
+        }
+
+        if (success) {
+            ApiCategory.Rsp categoryRsp = (ApiCategory.Rsp) rsp;
+            mData = categoryRsp.getData();
+            updateCategory();
+        }
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -77,38 +95,25 @@ public class CategoryFragment extends BaseFragment {
     @Override public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
 
-        if (!hidden && !mLoadSuccess) {
-            getCategories();
+        // 请求失败的简化处理方案: 界面切换时触发重新请求.
+        if (!hidden && mData == null) {
+            enqueue(new ApiCategory());
         }
     }
 
-    @Override protected int getContentViewLayout() {
-        return R.layout.fragment_category;
-    }
 
-    @OnItemClick(R.id.list_category)
-    public void onItemClick(int position) {
+    @OnItemClick(R.id.list_category) void onItemClick(int position) {
         chooseCategory(position);
     }
 
-    @OnItemClick(R.id.list_children)
-    public void onChildrenItemClick(int position) {
+    @OnItemClick(R.id.list_children) void onChildrenItemClick(int position) {
         int categoryId = mChildrenAdapter.getItem(position).getId();
         navigateToSearch(categoryId);
     }
 
-    private void getCategories() {
-        ApiCategory api = new ApiCategory();
-        enqueue(api, new UiCallback<ApiCategory.Rsp>(getContext()) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiCategory.Rsp responseEntity) {
-                if (success) {
-                    mLoadSuccess = true;
-                    mCategoryAdapter.reset(responseEntity.getData());
-                    chooseCategory(0);
-                }
-            }
-        });
+    private void updateCategory() {
+        mCategoryAdapter.reset(mData);
+        chooseCategory(0);
     }
 
     private void chooseCategory(int position) {

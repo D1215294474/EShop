@@ -1,10 +1,7 @@
 package com.feicuiedu.eshop.feature.home;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,15 +11,15 @@ import android.widget.TextView;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.glide.GlideUtils;
-import com.feicuiedu.eshop.base.glide.MaskTransformation;
 import com.feicuiedu.eshop.base.widgets.banner.BannerAdapter;
 import com.feicuiedu.eshop.base.widgets.banner.BannerLayout;
 import com.feicuiedu.eshop.base.wrapper.PtrWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
-import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.api.ApiHomeBanner;
 import com.feicuiedu.eshop.network.api.ApiHomeCategory;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Banner;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
 
@@ -30,8 +27,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 /**
  * 主页面.
@@ -52,10 +47,14 @@ public class HomeFragment extends BaseFragment {
             R.drawable.round_yellow
     };
 
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
+
     @BindView(R.id.list_home_goods) ListView goodsListView;
 
-    private HomeGoodsAdapter mGoodsAdapter;
-    private BannerAdapter<Banner> mBannerAdapter;
+    private HomeGoodsAdapter mGoodsAdapter; // 首页商品列表适配器.
+    private BannerAdapter<Banner> mBannerAdapter; //轮播图适配器.
     private PtrWrapper mPtrWrapper;
 
     private boolean mBannerRefreshed = false;
@@ -64,32 +63,25 @@ public class HomeFragment extends BaseFragment {
     private ImageView[] mIvPromotes = new ImageView[4];
     private TextView mTvPromoteGoods;
 
-    public HomeFragment() {
-        // Required empty public constructor
+    @Override protected int getContentViewLayout() {
+        return R.layout.fragment_home;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mGoodsAdapter = new HomeGoodsAdapter();
-
-        mBannerAdapter = new BannerAdapter<Banner>() {
-            @Override protected void bind(ViewHolder holder, Banner data) {
-                GlideUtils.loadBanner(data.getPicture(), holder.ivBannerItem);
-            }
-        };
-    }
-
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
+    @Override protected void initView() {
         new ToolbarWrapper(this).setCustomTitle(R.string.title_home);
+
+        mGoodsAdapter = new HomeGoodsAdapter();
         goodsListView.setAdapter(mGoodsAdapter);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.partial_home_header, goodsListView, false);
 
         BannerLayout bannerLayout = ButterKnife.findById(view, R.id.layout_banner);
+        mBannerAdapter = new BannerAdapter<Banner>() {
+            @Override protected void bind(ViewHolder holder, Banner data) {
+                GlideUtils.loadBanner(data.getPicture(), holder.ivBannerItem);
+            }
+        };
         bannerLayout.setBannerAdapter(mBannerAdapter);
 
         mIvPromotes[0] = ButterKnife.findById(view, R.id.image_promote_one);
@@ -106,19 +98,45 @@ public class HomeFragment extends BaseFragment {
                 mBannerRefreshed = false;
                 mCategoryRefreshed = false;
 
-                enqueue(new ApiHomeBanner(), new BannerCallback(getContext()));
-
-                enqueue(new ApiHomeCategory(), new CategoryCallback(getContext()));
+                // 获取轮播图和促销商品数据.
+                enqueue(new ApiHomeBanner());
+                // 获取首页商品分类数据.
+                enqueue(new ApiHomeCategory());
             }
         };
         mPtrWrapper.postRefresh(50);
     }
 
-    @Override protected int getContentViewLayout() {
-        return R.layout.fragment_home;
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+        switch (apiPath) {
+            case ApiConst.PATH_HOME_DATA:
+                mBannerRefreshed = true;
+                if (success) {
+                    ApiHomeBanner.Rsp bannerRsp = (ApiHomeBanner.Rsp) rsp;
+                    mBannerAdapter.reset(bannerRsp.getData().getBanners());
+                    setPromoteGoods(bannerRsp.getData().getGoodsList());
+                }
+                break;
+            case ApiConst.PATH_HOME_CATEGORY:
+                mCategoryRefreshed = true;
+                if (success) {
+                    ApiHomeCategory.Rsp categoryRsp = (ApiHomeCategory.Rsp) rsp;
+                    mGoodsAdapter.reset(categoryRsp.getData());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException(apiPath);
+        }
+
+        if (mBannerRefreshed && mCategoryRefreshed) {
+            // 两个接口的数据都返回了, 才停止下拉刷新.
+            mPtrWrapper.stopRefresh();
+        }
     }
 
 
+    // 设置显示促销商品.
     private void setPromoteGoods(final List<SimpleGoods> simpleGoodsList) {
 
         mTvPromoteGoods.setVisibility(View.VISIBLE);
@@ -129,12 +147,10 @@ public class HomeFragment extends BaseFragment {
                 mIvPromotes[i].setVisibility(View.VISIBLE);
                 final SimpleGoods simpleGoods = simpleGoodsList.get(i);
 
-                GlideUtils.loadPicture(simpleGoods.getImg(),
+                GlideUtils.loadPromote(simpleGoods.getImg(),
                         mIvPromotes[i],
                         PROMOTE_PLACE_HOLDER[i],
-                        new CropCircleTransformation(getContext()),
-                        new GrayscaleTransformation(getContext()),
-                        new MaskTransformation(getContext(), PROMOTE_COLORS[i]));
+                        PROMOTE_COLORS[i]);
 
                 mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
@@ -145,53 +161,6 @@ public class HomeFragment extends BaseFragment {
                 });
             } else {
                 mIvPromotes[i].setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    private class BannerCallback extends UiCallback<ApiHomeBanner.Rsp> {
-
-        public BannerCallback(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onBusinessResponse(boolean success, ApiHomeBanner.Rsp responseEntity) {
-            if (!isViewBind()) {
-                return;
-            }
-
-            mBannerRefreshed = true;
-            if (mCategoryRefreshed) {
-                mPtrWrapper.stopRefresh();
-            }
-
-            if (success) {
-                mBannerAdapter.reset(responseEntity.getData().getBanners());
-                setPromoteGoods(responseEntity.getData().getGoodsList());
-            }
-        }
-    }
-
-    private class CategoryCallback extends UiCallback<ApiHomeCategory.Rsp> {
-
-        public CategoryCallback(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onBusinessResponse(boolean success, ApiHomeCategory.Rsp responseEntity) {
-            if (!isViewBind()) {
-                return;
-            }
-
-            mCategoryRefreshed = true;
-            if (mBannerRefreshed) {
-                mPtrWrapper.stopRefresh();
-            }
-
-            if (success) {
-                mGoodsAdapter.reset(responseEntity.getData());
             }
         }
     }

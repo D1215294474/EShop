@@ -11,4 +11,5 @@ public class ApiTest {
         client = EShopClient.getInstance();
         client.setShowLog(true);
     }
+
 }

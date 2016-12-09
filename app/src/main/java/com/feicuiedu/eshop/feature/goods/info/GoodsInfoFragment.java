@@ -2,7 +2,6 @@ package com.feicuiedu.eshop.feature.goods.info;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 import com.google.gson.Gson;
 
@@ -28,14 +28,6 @@ public class GoodsInfoFragment extends BaseFragment {
 
     private static final String ARGUMENT_GOODS_INFO = "ARGUMENT_GOODS_INFO";
 
-    @BindView(R.id.pager_goods_pictures) ViewPager picturesPager; // 用于显示商品图片
-    @BindView(R.id.indicator) CircleIndicator circleIndicator; // ViewPager的圆点指示器
-    @BindView(R.id.text_goods_name) TextView tvGoodsName; // 商品名称
-    @BindView(R.id.text_goods_price) TextView tvGoodsPrice; // 商品价格
-    @BindView(R.id.text_market_price) TextView tvMarketPrice; // 商场价格
-
-    private GoodsInfo mGoodsInfo;
-
     /**
      * @param goodsInfo 待显示的商品信息实体
      * @return 新的GoodsInfoFragment对象
@@ -50,42 +42,47 @@ public class GoodsInfoFragment extends BaseFragment {
         return fragment;
     }
 
+    @BindView(R.id.pager_goods_pictures) ViewPager picturesPager; // 用于显示商品图片
+    @BindView(R.id.indicator) CircleIndicator circleIndicator; // ViewPager的圆点指示器
+    @BindView(R.id.text_goods_name) TextView tvGoodsName; // 商品名称
+    @BindView(R.id.text_goods_price) TextView tvGoodsPrice; // 商品价格
+    @BindView(R.id.text_market_price) TextView tvMarketPrice; // 商场价格
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        // 获取传入的商品信息实体
-        mGoodsInfo = new Gson().fromJson(getArguments().getString(ARGUMENT_GOODS_INFO),
-                GoodsInfo.class);
+    @Override protected int getContentViewLayout() {
+        return R.layout.fragment_goods_info;
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    @Override protected void initView() {
+
+        // 获取传入的商品信息实体
+        GoodsInfo goodsInfo = new Gson().fromJson(getArguments().getString(ARGUMENT_GOODS_INFO),
+                GoodsInfo.class);
 
         // 设置显示商品图片的ViewPager
-        GoodsPictureAdapter adapter = new GoodsPictureAdapter(mGoodsInfo.getPictures());
+        GoodsPictureAdapter adapter = new GoodsPictureAdapter(goodsInfo.getPictures());
         picturesPager.setAdapter(adapter);
         circleIndicator.setViewPager(picturesPager);
 
 
         // 设置商品名称, 价格等信息
-        tvGoodsName.setText(mGoodsInfo.getName());
-        tvGoodsPrice.setText(mGoodsInfo.getShopPrice());
+        tvGoodsName.setText(goodsInfo.getName());
+        tvGoodsPrice.setText(goodsInfo.getShopPrice());
 
         // 设置商场价格, 并添加删除线
-        String marketPrice = mGoodsInfo.getMarketPrice();
+        String marketPrice = goodsInfo.getMarketPrice();
         SpannableString spannableString = new SpannableString(marketPrice);
         spannableString.setSpan(
                 new StrikethroughSpan(), 0, marketPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvMarketPrice.setText(spannableString);
     }
 
-    @Override protected int getContentViewLayout() {
-        return R.layout.fragment_goods_info;
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+
     }
 
-    @OnClick(R.id.text_goods_comments)
-    public void changeToComments() {
+    @OnClick(R.id.text_goods_comments) void changeToComments() {
         // 切换到商品评价Fragment
         GoodsActivity activity = (GoodsActivity) getActivity();
         activity.selectPage(2);

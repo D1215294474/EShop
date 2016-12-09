@@ -4,9 +4,10 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.ApiInterface;
-import com.feicuiedu.eshop.network.RequestParam;
-import com.feicuiedu.eshop.network.ResponseEntity;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.RequestParam;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.CartBill;
 import com.feicuiedu.eshop.network.entity.Session;
@@ -31,7 +32,7 @@ public class ApiCartUpdate implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
-        return "/cart/update";
+        return ApiConst.PATH_CART_UPDATE;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {

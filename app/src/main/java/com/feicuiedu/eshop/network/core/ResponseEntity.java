@@ -1,4 +1,4 @@
-package com.feicuiedu.eshop.network;
+package com.feicuiedu.eshop.network.core;
 
 import com.feicuiedu.eshop.network.entity.Status;
 import com.google.gson.annotations.SerializedName;

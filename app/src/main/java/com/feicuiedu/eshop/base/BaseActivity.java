@@ -2,62 +2,68 @@ package com.feicuiedu.eshop.base;
 
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.view.MenuItem;
 
-import com.feicuiedu.eshop.network.ApiInterface;
 import com.feicuiedu.eshop.network.EShopClient;
-import com.feicuiedu.eshop.network.UiCallback;
-import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.core.UiCallback;
+import com.feicuiedu.eshop.network.event.UserEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import okhttp3.Call;
 
 /**
- * <p>通用Activity基类.
- * <p>视图初始化请在{@link #onContentChanged()}中完成.
+ * 通用Activity基类.
  */
 public abstract class BaseActivity extends TransitionActivity {
 
+    private Unbinder mUnbinder;
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getContentViewLayout());
+        mUnbinder = ButterKnife.bind(this);
+        initView();
         EventBus.getDefault().register(this);
-    }
-
-    @Override public void onContentChanged() {
-        super.onContentChanged();
-        ButterKnife.bind(this);
-    }
-
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
         EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
         EventBus.getDefault().unregister(this);
+        mUnbinder.unbind();
+        mUnbinder = null;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(UserManager.UpdateUserEvent event) {
-    }
+    protected Call enqueue(final ApiInterface apiInterface) {
+        UiCallback uiCallback = new UiCallback() {
+            @Override
+            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
+                BaseActivity.this.onBusinessResponse(
+                        apiInterface.getPath(),
+                        success,
+                        responseEntity);
+            }
+        };
 
-    public Call enqueue(ApiInterface apiInterface,
-                        UiCallback uiCallback) {
         return EShopClient.getInstance()
                 .enqueue(apiInterface, uiCallback, getClass().getSimpleName());
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(UserEvent event) {
+    }
 
+    @LayoutRes protected abstract  int getContentViewLayout();
+
+    protected abstract void initView();
+
+    protected abstract void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp);
 }

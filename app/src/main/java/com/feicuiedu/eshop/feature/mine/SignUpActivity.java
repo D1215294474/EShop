@@ -1,7 +1,5 @@
 package com.feicuiedu.eshop.feature.mine;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,12 +8,12 @@ import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
 import com.feicuiedu.eshop.base.utils.Sha256Utils;
 import com.feicuiedu.eshop.base.wrapper.ProgressWrapper;
+import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
-import com.feicuiedu.eshop.network.UiCallback;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiSignUp;
-import com.feicuiedu.eshop.network.entity.Session;
-import com.feicuiedu.eshop.network.entity.User;
+import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,59 +29,58 @@ public class SignUpActivity extends BaseActivity {
     @BindView(R.id.edit_password) EditText etPassword;
     @BindView(R.id.button_signup) Button btnSignUp;
 
-    private ProgressWrapper mProgressWrapper = new ProgressWrapper();
+    private ProgressWrapper mProgressWrapper;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+    private String mUsername;
+    private String mPassword;
+    private String mEmail;
+
+    @Override protected int getContentViewLayout() {
+        return R.layout.activity_sign_up;
     }
 
-    @Override public void onContentChanged() {
-        super.onContentChanged();
+    @Override protected void initView() {
         new ToolbarWrapper(this).setCustomTitle(R.string.title_sign_up);
+        mProgressWrapper = new ProgressWrapper();
     }
 
+    @Override
+    protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
+        if (!ApiConst.PATH_USER_SIGNUP.equals(apiPath)) {
+            throw new UnsupportedOperationException(apiPath);
+        }
 
-    @OnTextChanged({R.id.edit_password, R.id.edit_name, R.id.edit_email})
-    public void onTextChanged() {
-        String username = etName.getText().toString();
-        String email = etEmail.getText().toString();
-        String password = etPassword.getText().toString();
+        mProgressWrapper.dismissProgress();
+        if (success) {
+            ToastWrapper.show(R.string.sign_up_success);
+            ApiSignUp.Rsp signUpRsp = (ApiSignUp.Rsp) rsp;
+            UserManager.getInstance().setUser(
+                    signUpRsp.getData().getUser(),
+                    signUpRsp.getData().getSession()
+            );
+            finish();
+        }
+    }
 
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email)
-                || TextUtils.isEmpty(password)) {
+    @OnTextChanged({R.id.edit_password, R.id.edit_name, R.id.edit_email}) void onTextChanged() {
+        mUsername = etName.getText().toString();
+        mEmail = etEmail.getText().toString();
+        mPassword = etPassword.getText().toString();
+
+        // 简单的注册条件判断: 用户名, 邮箱和密码不能为空.
+        if (TextUtils.isEmpty(mUsername)
+                || TextUtils.isEmpty(mEmail)
+                || TextUtils.isEmpty(mPassword)) {
             btnSignUp.setEnabled(false);
         } else {
             btnSignUp.setEnabled(true);
         }
     }
 
-    @OnClick(R.id.button_signup)
-    public void signUp() {
-        String username = etName.getText().toString();
-        String password = etPassword.getText().toString();
-        String email = etEmail.getText().toString();
-
-
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email)
-                || TextUtils.isEmpty(password)) {
-            throw new IllegalStateException("Username, Password or Email is empty.");
-        }
-
-        ApiSignUp apiSignIn = new ApiSignUp(username, email, Sha256Utils.bin2hex(password));
-
+    @OnClick(R.id.button_signup) void signUp() {
+        // 用户注册.
         mProgressWrapper.showProgress(this);
-        enqueue(apiSignIn, new UiCallback<ApiSignUp.Rsp>(this) {
-            @Override
-            public void onBusinessResponse(boolean success, ApiSignUp.Rsp responseEntity) {
-                mProgressWrapper.dismiss();
-                if (success) {
-                    Session session = responseEntity.getData().getSession();
-                    User user = responseEntity.getData().getUser();
-                    UserManager.getInstance().signIn(session, user);
-                    finish();
-                }
-            }
-        });
+        ApiSignUp apiSignUp = new ApiSignUp(mUsername, mEmail, Sha256Utils.bin2hex(mPassword));
+        enqueue(apiSignUp);
     }
 }

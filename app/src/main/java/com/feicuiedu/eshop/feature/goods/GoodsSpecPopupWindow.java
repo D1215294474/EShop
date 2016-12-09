@@ -20,9 +20,11 @@ import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.base.widgets.SimpleNumberPicker;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.feature.mine.SignInActivity;
-import com.feicuiedu.eshop.network.UiCallback;
+import com.feicuiedu.eshop.network.EShopClient;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiCartCreate;
+import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.core.UiCallback;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 
 import butterknife.BindView;
@@ -70,8 +72,11 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
     }
 
 
-    @OnClick(R.id.button_ok)
-    public void addToCart() {
+    @Override public void onDismiss() {
+        backgroundAlpha(1.0f);
+    }
+
+    @OnClick(R.id.button_ok) void addToCart() {
         int number = numberPicker.getNumber();
 
         if (number == 0) {
@@ -79,25 +84,31 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
             return;
         }
 
-        if (!UserManager.getInstance().isSignIn()) {
+        if (!UserManager.getInstance().hasUser()) {
             Intent intent = new Intent(mActivity, SignInActivity.class);
             mActivity.startActivity(intent);
             return;
         }
 
         ApiCartCreate apiCartCreate = new ApiCartCreate(mGoodsInfo.getId(), number);
-        mActivity.enqueue(apiCartCreate, new UiCallback<ApiCartCreate.Rsp>(mActivity) {
+        EShopClient.getInstance().enqueue(apiCartCreate, new UiCallback() {
             @Override
-            public void onBusinessResponse(boolean success, ApiCartCreate.Rsp responseEntity) {
+            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
+
                 if (success) {
-                    UserManager.getInstance().updateCart(mActivity);
+                    UserManager.getInstance().retrieveCartList();
                     ToastWrapper.show(R.string.add_to_cart_succeed);
                     dismiss();
                 }
             }
-        });
+        }, null);
     }
 
+    private void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        mActivity.getWindow().setAttributes(lp);
+    }
 
     private void initView() {
         GlideUtils.loadPicture(mGoodsInfo.getImg(), ivGoods);
@@ -109,15 +120,5 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
                 tvNumber.setText(String.valueOf(number));
             }
         });
-    }
-
-    @Override public void onDismiss() {
-        backgroundAlpha(1.0f);
-    }
-
-    public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
-        lp.alpha = bgAlpha; //0.0-1.0
-        mActivity.getWindow().setAttributes(lp);
     }
 }

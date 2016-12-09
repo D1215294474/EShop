@@ -20,6 +20,7 @@
     <dimen name="size_300">300dp</dimen>
     <dimen name="size_260">260dp</dimen>
     <dimen name="size_180">180dp</dimen>
+    <dimen name="size_140">140dp</dimen>
     <dimen name="size_120">120dp</dimen>
     <dimen name="size_100">100dp</dimen>
     <dimen name="size_80">80dp</dimen>
@@ -29,6 +30,7 @@
     <dimen name="size_36">36dp</dimen>
     <dimen name="size_24">24dp</dimen>
     <dimen name="size_18">18dp</dimen>
+    <dimen name="size_10">10dp</dimen>
     <dimen name="size_4">4dp</dimen>
     <dimen name="size_2">2dp</dimen>
 

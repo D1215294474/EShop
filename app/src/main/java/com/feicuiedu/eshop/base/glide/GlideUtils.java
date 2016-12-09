@@ -2,23 +2,20 @@ package com.feicuiedu.eshop.base.glide;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.network.entity.Picture;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class GlideUtils {
 
@@ -64,27 +61,20 @@ public class GlideUtils {
                 .into(imageView);
     }
 
-    @SafeVarargs
-    public static void loadPicture(Picture picture,
+    public static void loadPromote(Picture picture,
                                    ImageView imageView,
                                    int placeholder,
-                                   Transformation<Bitmap>... transformations) {
+                                   int maskColor) {
 
         Context context = imageView.getContext();
-
-        List<Transformation<Bitmap>> transList = new ArrayList<>();
-        transList.addAll(Arrays.asList(transformations));
-        transList.add(new BlurTransformation(context, 5));
-
 
         DrawableRequestBuilder<String> thumbnailRequest = Glide
                 .with(context)
                 .load(picture.getSmall())
-                .bitmapTransform(transList.toArray(transformations));
+                .bitmapTransform(new CropCircleTransformation(context),
+                        new GrayscaleTransformation(context),
+                        new MaskTransformation(context, maskColor));
 
-        transList.clear();
-        transList.addAll(Arrays.asList(transformations));
-        transList.add(new TopCropTransformation(context));
 
         DrawableRequestBuilder<String> pictureRequest = Glide
                 .with(context)
@@ -94,20 +84,37 @@ public class GlideUtils {
                 .error(R.drawable.ic_loading_failure_big)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .bitmapTransform(transList.toArray(transformations));
+                .bitmapTransform(new CropCircleTransformation(context),
+                        new GrayscaleTransformation(context),
+                        new MaskTransformation(context, maskColor));
 
         pictureRequest.into(imageView);
 
     }
 
-    @SafeVarargs
     public static void loadPicture(Picture picture,
-                                   ImageView imageView,
-                                   Transformation<Bitmap>... transformations) {
+                                   ImageView imageView) {
 
-        loadPicture(picture, imageView,
-                getRandomPlaceholder(),
-                transformations);
+        Context context = imageView.getContext();
+
+        DrawableRequestBuilder<String> thumbnailRequest = Glide
+                .with(context)
+                .load(picture.getSmall())
+                .bitmapTransform(new BlurTransformation(context, 5),
+                        new TopCropTransformation(context));
+
+
+        DrawableRequestBuilder<String> pictureRequest = Glide
+                .with(context)
+                .load(picture.getMiddle())
+                .thumbnail(thumbnailRequest)
+                .placeholder(getRandomPlaceholder())
+                .error(R.drawable.ic_loading_failure_big)
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .bitmapTransform(new TopCropTransformation(context));
+
+        pictureRequest.into(imageView);
 
     }
 

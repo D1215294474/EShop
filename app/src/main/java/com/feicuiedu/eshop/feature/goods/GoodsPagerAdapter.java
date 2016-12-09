@@ -28,9 +28,9 @@ public class GoodsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return GoodsInfoFragment.newInstance(mGoodsInfo);
             case 1:
-                return new GoodsDetailsFragment();
+                return GoodsDetailsFragment.newInstance();
             case 2:
-                return new GoodsCommentsFragment();
+                return GoodsCommentsFragment.newInstance();
             default:
                 throw new UnsupportedOperationException("Illegal Position: " + position);
         }
