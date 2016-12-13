@@ -1,0 +1,27 @@
+package com.feicuiedu.eshop.network.entity;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * 支付方式.
+ */
+public class Payment {
+
+    @SerializedName("pay_id") private int mId;
+
+    @SerializedName("pay_name") private String mName;
+
+    @SerializedName("format_pay_fee") private String mPrice;
+
+    public int getId() {
+        return mId;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public String getPrice() {
+        return mPrice;
+    }
+}

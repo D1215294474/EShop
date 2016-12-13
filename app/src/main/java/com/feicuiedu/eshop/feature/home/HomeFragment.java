@@ -18,7 +18,7 @@ import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.api.ApiHomeBanner;
 import com.feicuiedu.eshop.network.api.ApiHomeCategory;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Banner;
 import com.feicuiedu.eshop.network.entity.SimpleGoods;
@@ -110,7 +110,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
         switch (apiPath) {
-            case ApiConst.PATH_HOME_DATA:
+            case ApiPath.HOME_DATA:
                 mBannerRefreshed = true;
                 if (success) {
                     ApiHomeBanner.Rsp bannerRsp = (ApiHomeBanner.Rsp) rsp;
@@ -118,7 +118,7 @@ public class HomeFragment extends BaseFragment {
                     setPromoteGoods(bannerRsp.getData().getGoodsList());
                 }
                 break;
-            case ApiConst.PATH_HOME_CATEGORY:
+            case ApiPath.HOME_CATEGORY:
                 mCategoryRefreshed = true;
                 if (success) {
                     ApiHomeCategory.Rsp categoryRsp = (ApiHomeCategory.Rsp) rsp;

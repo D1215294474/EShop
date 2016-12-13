@@ -14,7 +14,7 @@ import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiAddressDefault;
 import com.feicuiedu.eshop.network.api.ApiAddressDelete;
 import com.feicuiedu.eshop.network.api.ApiAddressInfo;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Address;
 import com.feicuiedu.eshop.network.event.AddressEvent;
@@ -53,15 +53,15 @@ public class ManageAddressActivity extends BaseActivity {
 
 
         switch (apiPath) {
-            case ApiConst.PATH_ADDRESS_DEFAULT:
-            case ApiConst.PATH_ADDRESS_DELETE:
+            case ApiPath.ADDRESS_DEFAULT:
+            case ApiPath.ADDRESS_DELETE:
                 if (success) {
                     UserManager.getInstance().retrieveAddressList();
                 } else {
                     mProgressWrapper.dismissProgress();
                 }
                 break;
-            case ApiConst.PATH_ADDRESS_INFO:
+            case ApiPath.ADDRESS_INFO:
                 mProgressWrapper.dismissProgress();
 
                 if (success) {

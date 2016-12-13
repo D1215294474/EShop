@@ -4,7 +4,7 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
@@ -25,7 +25,7 @@ public class ApiRegion implements ApiInterface {
     }
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_REGION;
+        return ApiPath.REGION;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -38,6 +38,10 @@ public class ApiRegion implements ApiInterface {
 
     public static class Req extends RequestParam {
         @SerializedName("parent_id") private int mParentId;
+
+        @Override protected int sessionUsage() {
+            return SESSION_NO_NEED;
+        }
     }
 
     public static class Rsp extends ResponseEntity {

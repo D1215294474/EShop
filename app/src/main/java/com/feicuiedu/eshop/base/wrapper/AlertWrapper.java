@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
+import com.feicuiedu.eshop.base.BaseActivity;
 import com.feicuiedu.eshop.base.BaseFragment;
 
 import butterknife.BindView;
@@ -104,6 +105,11 @@ public class AlertWrapper extends DialogFragment {
 
     public void showAlert(BaseFragment fragment) {
         if (isAdded()) return;
-        show(fragment.getChildFragmentManager(), "ProgressWrapper");
+        show(fragment.getChildFragmentManager(), "AlertWrapper");
+    }
+
+    public void showAlert(BaseActivity activity) {
+        if (isAdded()) return;
+        show(activity.getSupportFragmentManager(), "AlertWrapper");
     }
 }

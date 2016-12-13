@@ -12,7 +12,7 @@ import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.search.SearchGoodsActivity;
 import com.feicuiedu.eshop.network.api.ApiCategory;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.CategoryPrimary;
 import com.feicuiedu.eshop.network.entity.Filter;
@@ -65,7 +65,7 @@ public class CategoryFragment extends BaseFragment {
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-        if (!ApiConst.PATH_CATEGORY.equals(apiPath)) {
+        if (!ApiPath.CATEGORY.equals(apiPath)) {
             throw new UnsupportedOperationException(apiPath);
         }
 

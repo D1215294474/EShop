@@ -8,6 +8,7 @@ import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.utils.LogUtils;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.network.EShopClient;
+import com.feicuiedu.eshop.network.UserManager;
 
 import java.io.IOException;
 
@@ -76,6 +77,10 @@ public abstract class UiCallback implements Callback {
         } else {
             ToastWrapper.show(responseEntity.getStatus().getErrorDesc());
             onBusinessResponse(false, null);
+
+            if (responseEntity.getStatus().getErrorCode() == ApiError.SESSION_EXPIRE) {
+                UserManager.getInstance().clear();
+            }
         }
     }
 

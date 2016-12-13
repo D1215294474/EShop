@@ -13,7 +13,7 @@ import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiSignIn;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 
 import butterknife.BindView;
@@ -45,7 +45,7 @@ public class SignInActivity extends BaseActivity {
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-        if (!ApiConst.PATH_USER_SIGNIN.equals(apiPath)) {
+        if (!ApiPath.USER_SIGNIN.equals(apiPath)) {
             throw new UnsupportedOperationException(apiPath);
         }
 

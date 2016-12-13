@@ -4,7 +4,7 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
@@ -17,7 +17,7 @@ public class ApiHomeCategory implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_HOME_CATEGORY;
+        return ApiPath.HOME_CATEGORY;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {

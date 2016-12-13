@@ -4,7 +4,7 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
@@ -28,7 +28,7 @@ public class ApiSignIn implements ApiInterface {
     }
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_USER_SIGNIN;
+        return ApiPath.USER_SIGNIN;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -42,6 +42,10 @@ public class ApiSignIn implements ApiInterface {
     public static class Req extends RequestParam {
         @SerializedName("name") private String mName;
         @SerializedName("password") private String mPassword;
+
+        @Override protected int sessionUsage() {
+            return SESSION_NO_NEED;
+        }
     }
 
     public static class Rsp extends ResponseEntity {

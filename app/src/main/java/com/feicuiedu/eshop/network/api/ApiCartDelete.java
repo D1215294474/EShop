@@ -3,13 +3,11 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
 import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.CartBill;
-import com.feicuiedu.eshop.network.entity.Session;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -20,19 +18,12 @@ public class ApiCartDelete implements ApiInterface {
     private Req mReq;
 
     public ApiCartDelete(int recId) {
-
-        Session session = UserManager.getInstance().getSession();
-        if (session == null) {
-            throw new IllegalStateException("ApiCartDelete need a session.");
-        }
-
         mReq = new Req();
         mReq.mRecId = recId;
-        mReq.mSession = session;
     }
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_CART_DELETE;
+        return ApiPath.CART_DELETE;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -47,7 +38,9 @@ public class ApiCartDelete implements ApiInterface {
 
         @SerializedName("rec_id") int mRecId;
 
-        @SerializedName("session") Session mSession;
+        @Override protected int sessionUsage() {
+            return SESSION_MANDATORY;
+        }
     }
 
     public static class Rsp extends ResponseEntity {

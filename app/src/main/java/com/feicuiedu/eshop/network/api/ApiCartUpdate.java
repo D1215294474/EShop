@@ -4,13 +4,11 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
 import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.CartBill;
-import com.feicuiedu.eshop.network.entity.Session;
 import com.google.gson.annotations.SerializedName;
 
 public class ApiCartUpdate implements ApiInterface {
@@ -19,20 +17,15 @@ public class ApiCartUpdate implements ApiInterface {
     private Req mReq;
 
     public ApiCartUpdate(int recId, int newNumber) {
-        Session session = UserManager.getInstance().getSession();
-        if (session == null) {
-            throw new IllegalStateException("ApiCartUpdate need a session.");
-        }
 
         mReq = new Req();
-        mReq.mSession = session;
         mReq.mRecId = recId;
         mReq.mNumber = newNumber;
     }
 
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_CART_UPDATE;
+        return ApiPath.CART_UPDATE;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -49,7 +42,9 @@ public class ApiCartUpdate implements ApiInterface {
 
         @SerializedName("rec_id") int mRecId;
 
-        @SerializedName("session") Session mSession;
+        @Override protected int sessionUsage() {
+            return SESSION_MANDATORY;
+        }
     }
 
     public static class Rsp extends ResponseEntity {

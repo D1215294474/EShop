@@ -1,5 +1,6 @@
 package com.feicuiedu.eshop.network.api;
 
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -7,18 +8,19 @@ import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.entity.CartBill;
+import com.feicuiedu.eshop.network.entity.Address;
 import com.feicuiedu.eshop.network.entity.CartGoods;
+import com.feicuiedu.eshop.network.entity.Payment;
+import com.feicuiedu.eshop.network.entity.Shipping;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * 服务器接口: 购物车列表.
- */
-public class ApiCartList implements ApiInterface {
+public class ApiOrderPreview implements ApiInterface {
+
+
     @NonNull @Override public String getPath() {
-        return ApiPath.CART_LIST;
+        return ApiPath.ORDER_PREVIEW;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -38,7 +40,7 @@ public class ApiCartList implements ApiInterface {
 
     public static class Rsp extends ResponseEntity {
 
-        @SerializedName("data") Data mData;
+        @SerializedName("data") private Data mData;
 
         public Data getData() {
             return mData;
@@ -47,15 +49,28 @@ public class ApiCartList implements ApiInterface {
         public static class Data {
             @SerializedName("goods_list") private List<CartGoods> mGoodsList;
 
-            @SerializedName("total") private CartBill mCartBill;
+            @SerializedName("consignee") private Address mAddress;
+
+            @SerializedName("shipping_list") private List<Shipping> mShippingList; // 派送方式
+
+            @SerializedName("payment_list") private List<Payment> mPaymentList; // 支付方式
 
             public List<CartGoods> getGoodsList() {
                 return mGoodsList;
             }
 
-            public CartBill getCartBill() {
-                return mCartBill;
+            public Address getAddress() {
+                return mAddress;
+            }
+
+            public List<Shipping> getShippingList() {
+                return mShippingList;
+            }
+
+            public List<Payment> getPaymentList() {
+                return mPaymentList;
             }
         }
     }
+
 }

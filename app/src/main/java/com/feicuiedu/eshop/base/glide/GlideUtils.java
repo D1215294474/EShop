@@ -11,23 +11,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.network.entity.Picture;
 
-import java.util.Random;
-
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class GlideUtils {
-
-    private static final int[] PLACE_HOLDERS = {
-            R.drawable.bg_1,
-            R.drawable.bg_2,
-            R.drawable.bg_3,
-            R.drawable.bg_4,
-            R.drawable.bg_5,
-            R.drawable.bg_6,
-            R.drawable.bg_7,
-    };
 
     private GlideUtils() {
     }
@@ -54,7 +42,7 @@ public class GlideUtils {
                 .load(picture.getLarge())
                 .thumbnail(thumbnailRequest)
                 .error(R.drawable.ic_loading_failure_big)
-                .placeholder(getRandomPlaceholder())
+                .placeholder(R.drawable.picture_holder)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .bitmapTransform(new TopCropTransformation(context))
@@ -108,7 +96,7 @@ public class GlideUtils {
                 .with(context)
                 .load(picture.getMiddle())
                 .thumbnail(thumbnailRequest)
-                .placeholder(getRandomPlaceholder())
+                .placeholder(R.drawable.picture_holder)
                 .error(R.drawable.ic_loading_failure_big)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -116,10 +104,6 @@ public class GlideUtils {
 
         pictureRequest.into(imageView);
 
-    }
-
-    private static int getRandomPlaceholder() {
-        return PLACE_HOLDERS[new Random().nextInt(PLACE_HOLDERS.length)];
     }
 
 }

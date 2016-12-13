@@ -18,7 +18,7 @@ import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiAddressAdd;
 import com.feicuiedu.eshop.network.api.ApiAddressUpdate;
 import com.feicuiedu.eshop.network.api.ApiRegion;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Address;
 import com.feicuiedu.eshop.network.entity.Region;
@@ -52,6 +52,7 @@ public class EditAddressActivity extends BaseActivity {
     @BindView(R.id.edit_tel) EditText etTel;
     @BindView(R.id.edit_detail) EditText etDetail;
     @BindView(R.id.edit_zipcode) EditText etZipcode;
+    @BindView(R.id.edit_email) EditText etEmail;
     @BindView(R.id.button_save) Button btnSave;
     @BindView(R.id.text_region) TextView tvRegion;
 
@@ -59,6 +60,7 @@ public class EditAddressActivity extends BaseActivity {
     private String mTel; // 手机号码
     private String mDetail; // 详细地址
     private String mZipCode; // 邮编
+    private String mEmail; // 邮箱
 
     private int mProvinceId; // 省份Id
     private String mProvinceName; // 省份名称
@@ -95,6 +97,7 @@ public class EditAddressActivity extends BaseActivity {
             etDetail.setText(mAddress.getAddress());
             etTel.setText(mAddress.getTel());
             etZipcode.setText(mAddress.getZipcode());
+            etEmail.setText(mAddress.getEmail());
 
             mProvinceId = mAddress.getProvince();
             mProvinceName = mAddress.getProvinceName();
@@ -111,14 +114,14 @@ public class EditAddressActivity extends BaseActivity {
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
         switch (apiPath) {
-            case ApiConst.PATH_ADDRESS_ADD:
+            case ApiPath.ADDRESS_ADD:
                 UserManager.getInstance().retrieveAddressList();
                 if (success) {
                     ToastWrapper.show(R.string.add_address_success);
                     finish();
                 }
                 break;
-            case ApiConst.PATH_REGION:
+            case ApiPath.REGION:
                 if (success) {
                     ApiRegion.Rsp regionRsp = (ApiRegion.Rsp) rsp;
                     handleRegionResult(regionRsp.getData().getRegions());
@@ -126,7 +129,7 @@ public class EditAddressActivity extends BaseActivity {
                     clearRegionInfo();
                 }
                 break;
-            case ApiConst.PATH_ADDRESS_UPDATE:
+            case ApiPath.ADDRESS_UPDATE:
                 UserManager.getInstance().retrieveAddressList();
                 if (success) {
                     ToastWrapper.show(R.string.edit_address_success);
@@ -138,12 +141,18 @@ public class EditAddressActivity extends BaseActivity {
         }
     }
 
-    @OnTextChanged({R.id.edit_consignee, R.id.edit_tel, R.id.edit_detail, R.id.edit_zipcode})
-    void onTextChanged() {
+    @OnTextChanged({
+            R.id.edit_consignee,
+            R.id.edit_tel,
+            R.id.edit_detail,
+            R.id.edit_zipcode,
+            R.id.edit_email
+    }) void onTextChanged() {
         mConsignee = etConsignee.getText().toString();
         mTel = etTel.getText().toString();
         mDetail = etDetail.getText().toString();
         mZipCode = etZipcode.getText().toString();
+        mEmail = etEmail.getText().toString();
 
         checkAddressComplete();
     }
@@ -164,11 +173,14 @@ public class EditAddressActivity extends BaseActivity {
 
         address.setConsignee(mConsignee);
         address.setTel(mTel);
+        address.setMobile(mTel);
+        address.setCountry(ApiRegion.ID_CHINA);
         address.setProvince(mProvinceId);
         address.setCity(mCityId);
         address.setDistrict(mDistrictId);
         address.setAddress(mDetail);
         address.setZipcode(mZipCode);
+        address.setEmail(mEmail);
         address.setIsDefault(true);
 
 
@@ -187,7 +199,8 @@ public class EditAddressActivity extends BaseActivity {
         if (TextUtils.isEmpty(mConsignee)
                 || TextUtils.isEmpty(mTel)
                 || TextUtils.isEmpty(mDetail)
-                || TextUtils.isEmpty(mZipCode)) {
+                || TextUtils.isEmpty(mZipCode)
+                || TextUtils.isEmpty(mEmail)) {
             btnSave.setEnabled(false);
             return;
         }

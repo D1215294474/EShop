@@ -35,6 +35,8 @@ public class Address {
 
     @SerializedName("tel") private String mTel;
 
+    @SerializedName("mobile") private String mMobile;
+
     @SerializedName("default_address") private int mDefault;
 
     public int getId() {
@@ -151,5 +153,9 @@ public class Address {
 
     public void setDistrictName(String districtName) {
         mDistrictName = districtName;
+    }
+
+    public void setMobile(String mobile) {
+        mMobile = mobile;
     }
 }

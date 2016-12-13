@@ -19,7 +19,7 @@ import com.feicuiedu.eshop.feature.goods.comments.GoodsCommentsFragment;
 import com.feicuiedu.eshop.feature.goods.details.GoodsDetailsFragment;
 import com.feicuiedu.eshop.feature.goods.info.GoodsInfoFragment;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 
@@ -72,7 +72,7 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-        if (!ApiConst.PATH_GOODS.equals(apiPath)) {
+        if (!ApiPath.GOODS.equals(apiPath)) {
             throw new UnsupportedOperationException(apiPath);
         }
 

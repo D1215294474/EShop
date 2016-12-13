@@ -1,35 +1,30 @@
 package com.feicuiedu.eshop.network.api;
 
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.entity.Session;
-import com.feicuiedu.eshop.network.entity.User;
+import com.feicuiedu.eshop.network.entity.OrderInfo;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * 服务器接口: 用户注册.
+ * 订单生成.
  */
-public class ApiSignUp implements ApiInterface {
+public class ApiOrderDone implements ApiInterface {
 
-    private ApiSignUp.Req mReq;
+    private Req mReq;
 
-    public ApiSignUp(@NonNull String name,
-                     @NonNull String email,
-                     @NonNull String password) {
+    public ApiOrderDone(int payId, int shippingId) {
         mReq = new Req();
-        mReq.mName = name;
-        mReq.mPassword = password;
-        mReq.mEmail = email;
+        mReq.mPayId = payId;
+        mReq.mShippingId = shippingId;
     }
 
     @NonNull @Override public String getPath() {
-        return ApiPath.USER_SIGNUP;
+        return ApiPath.ORDER_DONE;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -41,12 +36,12 @@ public class ApiSignUp implements ApiInterface {
     }
 
     public static class Req extends RequestParam {
-        @SerializedName("name") private String mName;
-        @SerializedName("email") private String mEmail;
-        @SerializedName("password") private String mPassword;
+
+        @SerializedName("pay_id") private int mPayId;
+        @SerializedName("shipping_id") private int mShippingId;
 
         @Override protected int sessionUsage() {
-            return SESSION_NO_NEED;
+            return SESSION_MANDATORY;
         }
     }
 
@@ -59,15 +54,20 @@ public class ApiSignUp implements ApiInterface {
         }
 
         public static class Data {
-            @SerializedName("session") private Session mSession;
-            @SerializedName("user") private User mUser;
+            @SerializedName("order_sn") private String mSn;
+            @SerializedName("order_id") private String mId;
+            @SerializedName("order_info") private OrderInfo mOrderInfo;
 
-            public Session getSession() {
-                return mSession;
+            public String getSn() {
+                return mSn;
             }
 
-            public User getUser() {
-                return mUser;
+            public String getId() {
+                return mId;
+            }
+
+            public OrderInfo getOrderInfo() {
+                return mOrderInfo;
             }
         }
     }

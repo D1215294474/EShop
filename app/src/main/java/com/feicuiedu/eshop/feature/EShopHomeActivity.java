@@ -1,6 +1,5 @@
 package com.feicuiedu.eshop.feature;
 
-import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +11,9 @@ import com.feicuiedu.eshop.feature.cart.CartFragment;
 import com.feicuiedu.eshop.feature.category.CategoryFragment;
 import com.feicuiedu.eshop.feature.home.HomeFragment;
 import com.feicuiedu.eshop.feature.mine.MineFragment;
+import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.event.CartEvent;
-import com.feicuiedu.eshop.network.UserManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -43,21 +42,14 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
 
     private Fragment mCurrentFragment;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        if (savedInstanceState != null) { // “内存重启”时调用
-            // 注意必须在bottomBar.setOnTabSelectListener之前调用, 否则会出现Fragment重叠
-            retrieveFragments();
-        }
-        super.onCreate(savedInstanceState);
-    }
-
     @Override protected int getContentViewLayout() {
         return R.layout.activity_eshop_home;
     }
 
     @Override protected void initView() {
+        // "内存重启"时(例如修改手机字体大小), 恢复之前的Fragment.
+        // 注意此方法只有在父类的onCreate(Bundle)调用之后才有效.
+        retrieveFragments();
         bottomBar.setOnTabSelectListener(this);
     }
 

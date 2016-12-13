@@ -13,13 +13,14 @@ import com.feicuiedu.eshop.base.wrapper.AlertWrapper;
 import com.feicuiedu.eshop.base.wrapper.ProgressWrapper;
 import com.feicuiedu.eshop.base.wrapper.PtrWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
+import com.feicuiedu.eshop.feature.address.edit.EditAddressActivity;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.feature.mine.SignInActivity;
 import com.feicuiedu.eshop.feature.order.OrderPreviewActivity;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiCartDelete;
 import com.feicuiedu.eshop.network.api.ApiCartUpdate;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.CartGoods;
 import com.feicuiedu.eshop.network.event.CartEvent;
@@ -84,8 +85,8 @@ public class CartFragment extends BaseFragment {
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
 
         switch (apiPath) {
-            case ApiConst.PATH_CART_DELETE:
-            case ApiConst.PATH_CART_UPDATE:
+            case ApiPath.CART_DELETE:
+            case ApiPath.CART_UPDATE:
                 if (success) {
                     UserManager.getInstance().retrieveCartList();
                 } else {
@@ -125,10 +126,16 @@ public class CartFragment extends BaseFragment {
         getActivity().startActivity(intent);
     }
 
-    @OnClick(R.id.button_summit) void navigateToOrderPreview() {
-        // 跳转到订单预览.
-        Intent intent = new Intent(getContext(), OrderPreviewActivity.class);
-        getActivity().startActivity(intent);
+    @OnClick(R.id.button_summit) void summit() {
+        if (UserManager.getInstance().hasAddress()) {
+            // 跳转到订单预览.
+            Intent intent = new Intent(getContext(), OrderPreviewActivity.class);
+            getActivity().startActivity(intent);
+        } else {
+            // 添加收件人地址.
+            Intent intent = EditAddressActivity.getStartIntent(getContext(), null);
+            getActivity().startActivity(intent);
+        }
     }
 
     @OnItemLongClick(R.id.list_cart_goods) boolean onItemLongClick(int position) {

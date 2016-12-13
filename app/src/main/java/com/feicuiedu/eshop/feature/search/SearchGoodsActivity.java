@@ -15,7 +15,7 @@ import com.feicuiedu.eshop.base.wrapper.PtrWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.api.ApiSearch;
-import com.feicuiedu.eshop.network.core.ApiConst;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.Filter;
 import com.feicuiedu.eshop.network.entity.Paginated;
@@ -105,7 +105,7 @@ public class SearchGoodsActivity extends BaseActivity {
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-        if (!ApiConst.PATH_SEARCH.equals(apiPath)) {
+        if (!ApiPath.SEARCH.equals(apiPath)) {
             throw new UnsupportedOperationException(apiPath);
         }
 

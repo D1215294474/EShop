@@ -50,13 +50,13 @@
     <string name="inventory">库存</string>
 
     <string name="total_price">总额:</string>
-    <string name="please_choose_consignee">没有收货地址, 点击添加.</string>
 
     <string name="address_consignee">收件人姓名</string>
     <string name="address_tel">手机号码</string>
     <string name="address_region">所在地区</string>
     <string name="address_detail">详细地址</string>
     <string name="address_zipcode">邮政编码</string>
+    <string name="address_email">邮箱地址</string>
 
     <string name="sign_in_success">登录成功</string>
     <string name="sign_up_success">注册成功</string>
@@ -68,10 +68,14 @@
     <string name="address_hint_region">省, 市, 区</string>
     <string name="address_hint_detail">请如实填写收件人详细地址</string>
     <string name="address_hint_zipcode">请如实填写邮政编码</string>
+    <string name="address_hint_email">请如实填写收件人邮箱</string>
 
     <string name="choose_province">选择省份</string>
     <string name="choose_city">选择城市</string>
     <string name="choose_district">选择地区</string>
+
+    <string name="choose_payment">选择支付方式</string>
+    <string name="choose_shipping">选择派送方式</string>
 
     <string name="address_save_and_use">保存并使用</string>
 
@@ -79,9 +83,27 @@
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
 
+    <string name="consignee_name">收件人: %s</string>
+    <string name="order_goods_amount">数量: %s</string>
+
     <string name="create_address">添加收货地址</string>
 
     <string name="can_not_delete_default_address">不能删除默认地址</string>
+
+    <string name="payment">支付方式</string>
+    <string name="shipping">派送方式</string>
+
+    <string name="payment_name">支付方式 (%s)</string>
+    <string name="shipping_name">派送方式 (%s)</string>
+    <string name="order_goods_price">商品总额: %s</string>
+    <string name="order_shipping_price">运费金额: %s</string>
+
+    <string name="order_wait_pay">待支付</string>
+    <string name="order_wait_ship">待发货</string>
+    <string name="order_shipped">已发货</string>
+    <string name="order_history">历史</string>
+
+    <string name="alert_purchase_order">订单已生成, 是否现在支付?</string>
 
     <string name="title_home">首&#160;&#160;页</string>
     <string name="title_category">分&#160;&#160;类</string>

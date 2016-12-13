@@ -3,13 +3,11 @@ package com.feicuiedu.eshop.network.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.feicuiedu.eshop.network.core.ApiConst;
 import com.feicuiedu.eshop.network.core.ApiInterface;
+import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
-import com.feicuiedu.eshop.network.entity.Session;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -26,7 +24,7 @@ public class ApiGoodsInfo implements ApiInterface {
 
 
     @NonNull @Override public String getPath() {
-        return ApiConst.PATH_GOODS;
+        return ApiPath.GOODS;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -42,8 +40,9 @@ public class ApiGoodsInfo implements ApiInterface {
         @SerializedName("goods_id")
         private int mGoodsId;
 
-        @SerializedName("session")
-        private Session mSession = UserManager.getInstance().getSession();
+        @Override protected int sessionUsage() {
+            return SESSION_OPTIONAL;
+        }
     }
 
     public static class Rsp extends ResponseEntity {

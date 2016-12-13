@@ -61,7 +61,7 @@ public abstract class BaseActivity extends TransitionActivity {
     public void onEvent(UserEvent event) {
     }
 
-    @LayoutRes protected abstract  int getContentViewLayout();
+    @LayoutRes protected abstract int getContentViewLayout();
 
     protected abstract void initView();
 
