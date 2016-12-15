@@ -111,6 +111,14 @@
     <string name="order_action_purchase">支付</string>
     <string name="order_is_canceled">订单已取消</string>
 
+    <string name="collect_title">收藏列表</string>
+    <string name="collect_msg_already_collected">本商品已收藏</string>
+    <string name="collect_my_favorite">我的收藏</string>
+    <string name="collect_grid">网格</string>
+    <string name="collect_list">列表</string>
+    <string name="collect_msg_confirm_delete">是否取消收藏?</string>
+    <string name="collect_msg_delete_success">该收藏记录已删除</string>
+
     <string name="settings_title">设&#160;&#160;置</string>
     <string name="settings_action_sign_out">退出账号</string>
 
@@ -120,6 +128,7 @@
     <string name="action_edit">编辑</string>
     <string name="action_delete">删除</string>
     <string name="action_submit">提交</string>
+    <string name="action_search">搜索</string>
 
     <string name="msg_load_more_complete">没有更多了…</string>
     <string name="msg_wait">请稍后…</string>

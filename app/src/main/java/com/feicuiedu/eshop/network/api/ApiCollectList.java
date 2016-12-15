@@ -1,6 +1,5 @@
 package com.feicuiedu.eshop.network.api;
 
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,19 +7,27 @@ import com.feicuiedu.eshop.network.core.ApiInterface;
 import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
+import com.feicuiedu.eshop.network.entity.CollectGoods;
+import com.feicuiedu.eshop.network.entity.Paginated;
+import com.feicuiedu.eshop.network.entity.Pagination;
 import com.google.gson.annotations.SerializedName;
 
-public class ApiCollectCreate implements ApiInterface {
+import java.util.List;
+
+/**
+ * 获取收藏列表.
+ */
+public class ApiCollectList implements ApiInterface {
 
     private final Req mReq;
 
-    public ApiCollectCreate(int goodsId) {
+    public ApiCollectList(Pagination pagination) {
         mReq = new Req();
-        mReq.mGoodsId = goodsId;
+        mReq.mPagination = pagination;
     }
 
     @NonNull @Override public String getPath() {
-        return ApiPath.COLLECT_CREATE;
+        return ApiPath.COLLECT_LIST;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -33,7 +40,7 @@ public class ApiCollectCreate implements ApiInterface {
 
     public static class Req extends RequestParam {
 
-        @SerializedName("goods_id") private int mGoodsId;
+        @SerializedName("pagination") private Pagination mPagination;
 
         @Override protected int sessionUsage() {
             return SESSION_MANDATORY;
@@ -41,8 +48,15 @@ public class ApiCollectCreate implements ApiInterface {
     }
 
     public static class Rsp extends ResponseEntity {
+        @SerializedName("paginated") private Paginated mPaginated;
+        @SerializedName("data") private List<CollectGoods> mGoodsList;
 
+        public Paginated getPaginated() {
+            return mPaginated;
+        }
+
+        public List<CollectGoods> getGoodsList() {
+            return mGoodsList;
+        }
     }
-
-
 }

@@ -10,17 +10,17 @@ import com.feicuiedu.eshop.network.core.RequestParam;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.google.gson.annotations.SerializedName;
 
-public class ApiCollectCreate implements ApiInterface {
+public class ApiCollectDelete implements ApiInterface {
 
     private final Req mReq;
 
-    public ApiCollectCreate(int goodsId) {
+    public ApiCollectDelete(int recId) {
         mReq = new Req();
-        mReq.mGoodsId = goodsId;
+        mReq.mRecId = recId;
     }
 
     @NonNull @Override public String getPath() {
-        return ApiPath.COLLECT_CREATE;
+        return ApiPath.COLLECT_DELETE;
     }
 
     @Nullable @Override public RequestParam getRequestParam() {
@@ -33,7 +33,7 @@ public class ApiCollectCreate implements ApiInterface {
 
     public static class Req extends RequestParam {
 
-        @SerializedName("goods_id") private int mGoodsId;
+        @SerializedName("rec_id") private int mRecId;
 
         @Override protected int sessionUsage() {
             return SESSION_MANDATORY;
@@ -41,8 +41,5 @@ public class ApiCollectCreate implements ApiInterface {
     }
 
     public static class Rsp extends ResponseEntity {
-
     }
-
-
 }

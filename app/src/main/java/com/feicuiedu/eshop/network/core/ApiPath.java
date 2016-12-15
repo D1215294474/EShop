@@ -3,6 +3,8 @@ package com.feicuiedu.eshop.network.core;
 
 public interface ApiPath {
 
+    String COLLECT_DELETE = "/user/collect/delete";
+    String COLLECT_LIST = "/user/collect/list";
     String COLLECT_CREATE = "/user/collect/create";
     String ORDER_CANCEL = "/order/cancel";
     String ORDER_LIST = "/order/list";

@@ -9,6 +9,7 @@ import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.wrapper.BadgeWrapper;
 import com.feicuiedu.eshop.feature.address.manage.ManageAddressActivity;
+import com.feicuiedu.eshop.feature.collect.CollectActivity;
 import com.feicuiedu.eshop.feature.order.list.OrderListActivity;
 import com.feicuiedu.eshop.feature.settings.SettingsActivity;
 import com.feicuiedu.eshop.network.UserManager;
@@ -80,7 +81,8 @@ public class MineFragment extends BaseFragment {
             R.id.text_order_unconfirmed,
             R.id.text_wait_ship,
             R.id.text_shipped,
-            R.id.text_history
+            R.id.text_history,
+            R.id.text_favorite
     }) void onClick(View view) {
 
         if (!UserManager.getInstance().hasUser()) {
@@ -120,6 +122,10 @@ public class MineFragment extends BaseFragment {
                 Intent history = OrderListActivity
                         .getStartIntent(getContext(), ApiOrderList.ORDER_FINISHED);
                 startActivity(history);
+                break;
+            case R.id.text_favorite:
+                Intent collect = new Intent(getContext(), CollectActivity.class);
+                startActivity(collect);
                 break;
             default:
                 throw new UnsupportedOperationException();

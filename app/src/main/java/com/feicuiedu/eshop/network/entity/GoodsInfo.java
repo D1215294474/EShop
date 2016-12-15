@@ -25,6 +25,8 @@ public class GoodsInfo {
 
     @SerializedName("goods_number") private int mNumber;
 
+    @SerializedName("collected") private int mCollected;
+
     public String getMarketPrice() {
         return mMarketPrice;
     }
@@ -55,5 +57,9 @@ public class GoodsInfo {
 
     public int getNumber() {
         return mNumber;
+    }
+
+    public boolean isCollected() {
+        return mCollected == 1;
     }
 }

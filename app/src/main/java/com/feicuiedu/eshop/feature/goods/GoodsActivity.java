@@ -93,7 +93,9 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
                 if (success) {
                     ApiGoodsInfo.Rsp goodsRsp = (ApiGoodsInfo.Rsp) rsp;
                     mGoodsInfo = goodsRsp.getData();
-                    goodsPager.setAdapter(new GoodsPagerAdapter(getSupportFragmentManager(), mGoodsInfo));
+                    goodsPager.setAdapter(
+                            new GoodsPagerAdapter(getSupportFragmentManager(), mGoodsInfo)
+                    );
                     chooseTab(0);
                 }
                 break;
