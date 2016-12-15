@@ -2,7 +2,6 @@ package com.feicuiedu.eshop.feature.goods;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
@@ -19,12 +18,6 @@ import com.feicuiedu.eshop.base.BaseActivity;
 import com.feicuiedu.eshop.base.glide.GlideUtils;
 import com.feicuiedu.eshop.base.widgets.SimpleNumberPicker;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
-import com.feicuiedu.eshop.feature.mine.SignInActivity;
-import com.feicuiedu.eshop.network.EShopClient;
-import com.feicuiedu.eshop.network.UserManager;
-import com.feicuiedu.eshop.network.api.ApiCartCreate;
-import com.feicuiedu.eshop.network.core.ResponseEntity;
-import com.feicuiedu.eshop.network.core.UiCallback;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
 
 import butterknife.BindView;
@@ -42,6 +35,8 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
     private ViewGroup mParent;
     private GoodsInfo mGoodsInfo;
     private BaseActivity mActivity;
+
+    private OnConfirmListener mConfirmListener;
 
     public GoodsSpecPopupWindow(BaseActivity activity, @NonNull GoodsInfo goodsInfo) {
         mActivity = activity;
@@ -66,7 +61,8 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
         initView();
     }
 
-    public void show() {
+    public void show(OnConfirmListener listener) {
+        mConfirmListener = listener;
         showAtLocation(mParent, Gravity.BOTTOM, 0, 0);
         backgroundAlpha(0.6f);
     }
@@ -74,34 +70,17 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
 
     @Override public void onDismiss() {
         backgroundAlpha(1.0f);
+        mConfirmListener = null;
     }
 
-    @OnClick(R.id.button_ok) void addToCart() {
+    @OnClick(R.id.button_ok) void onClick() {
         int number = numberPicker.getNumber();
 
         if (number == 0) {
-            ToastWrapper.show(R.string.please_choose_number);
+            ToastWrapper.show(R.string.goods_msg_must_choose_number);
             return;
         }
-
-        if (!UserManager.getInstance().hasUser()) {
-            Intent intent = new Intent(mActivity, SignInActivity.class);
-            mActivity.startActivity(intent);
-            return;
-        }
-
-        ApiCartCreate apiCartCreate = new ApiCartCreate(mGoodsInfo.getId(), number);
-        EShopClient.getInstance().enqueue(apiCartCreate, new UiCallback() {
-            @Override
-            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
-
-                if (success) {
-                    UserManager.getInstance().retrieveCartList();
-                    ToastWrapper.show(R.string.add_to_cart_succeed);
-                    dismiss();
-                }
-            }
-        }, null);
+        mConfirmListener.onConfirm(number);
     }
 
     private void backgroundAlpha(float bgAlpha) {
@@ -120,5 +99,9 @@ public class GoodsSpecPopupWindow extends PopupWindow implements PopupWindow.OnD
                 tvNumber.setText(String.valueOf(number));
             }
         });
+    }
+
+    public interface OnConfirmListener {
+        void onConfirm(int number);
     }
 }

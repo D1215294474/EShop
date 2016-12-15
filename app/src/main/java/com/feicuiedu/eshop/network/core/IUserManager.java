@@ -16,6 +16,8 @@ public interface IUserManager {
     // --------账号管理-------- //
     void setUser(@NonNull User user, @NonNull Session session);
 
+    void retrieveUserInfo();
+
     void clear();
 
     boolean hasUser();

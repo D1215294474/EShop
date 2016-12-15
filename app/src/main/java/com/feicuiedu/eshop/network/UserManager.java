@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.feicuiedu.eshop.network.api.ApiAddressList;
 import com.feicuiedu.eshop.network.api.ApiCartList;
+import com.feicuiedu.eshop.network.api.ApiUserInfo;
 import com.feicuiedu.eshop.network.core.IUserManager;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.core.UiCallback;
@@ -52,6 +53,21 @@ public class UserManager implements IUserManager {
         retrieveAddressList();
     }
 
+    @Override public void retrieveUserInfo() {
+        ApiUserInfo apiUserInfo = new ApiUserInfo();
+        UiCallback callback = new UiCallback() {
+            @Override
+            public void onBusinessResponse(boolean success, ResponseEntity responseEntity) {
+                if (success) {
+                    ApiUserInfo.Rsp userRsp = (ApiUserInfo.Rsp) responseEntity;
+                    mUser = userRsp.getUser();
+                }
+                mBus.postSticky(new UserEvent());
+            }
+        };
+        mClient.enqueue(apiUserInfo, callback, getClass().getSimpleName());
+    }
+
     @Override public void retrieveCartList() {
         ApiCartList apiCartList = new ApiCartList();
         UiCallback cb = new UiCallback() {
@@ -68,7 +84,7 @@ public class UserManager implements IUserManager {
             }
         };
 
-        mClient.enqueue(apiCartList, cb, null);
+        mClient.enqueue(apiCartList, cb, getClass().getSimpleName());
     }
 
     @Override public void retrieveAddressList() {

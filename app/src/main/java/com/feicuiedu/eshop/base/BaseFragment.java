@@ -41,7 +41,7 @@ public abstract class BaseFragment extends Fragment {
         return view;
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
         EventBus.getDefault().register(this);
@@ -74,7 +74,6 @@ public abstract class BaseFragment extends Fragment {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(UserEvent event) {
     }
-
     @LayoutRes protected abstract int getContentViewLayout();
 
     protected abstract void initView();

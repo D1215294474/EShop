@@ -33,19 +33,19 @@
             android:id="@+id/text_is_hot"
             style="@style/QueryOrderTab"
             android:drawableRight="@drawable/selector_ic_is_hot"
-            android:text="@string/is_hot"/>
+            android:text="@string/search_order_is_hot"/>
 
         <TextView
             android:id="@+id/text_most_expensive"
             style="@style/QueryOrderTab"
             android:drawableRight="@drawable/selector_ic_most_expensive"
-            android:text="@string/price"/>
+            android:text="@string/search_order_price"/>
 
         <TextView
             android:id="@+id/text_cheapest"
             style="@style/QueryOrderTab"
             android:drawableRight="@drawable/selector_ic_cheapest"
-            android:text="@string/price"/>
+            android:text="@string/search_order_price"/>
 
     </LinearLayout>
 

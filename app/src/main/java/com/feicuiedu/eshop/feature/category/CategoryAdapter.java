@@ -21,18 +21,16 @@ public class CategoryAdapter extends BaseListAdapter<CategoryPrimary, CategoryAd
         return new ViewHolder(itemView);
     }
 
-    @Override protected void bindItem(int position,
-                                      CategoryPrimary item,
-                                      final ViewHolder viewHolder) {
-        viewHolder.tvCategory.setText(item.getName());
-    }
-
-    static class ViewHolder extends BaseListAdapter.ViewHolder {
+    class ViewHolder extends BaseListAdapter.ViewHolder {
 
         @BindView(R.id.text_category) TextView tvCategory;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @Override protected void bind(int position) {
+            tvCategory.setText(getItem(position).getName());
         }
     }
 }

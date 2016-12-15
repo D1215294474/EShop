@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing_small"
-        android:text="@string/promote_goods"
+        android:text="@string/home_promote_goods"
         android:textAppearance="@style/ContentText.Large"
         android:visibility="invisible"/>
 

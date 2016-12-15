@@ -11,78 +11,115 @@
 
         <include layout="@layout/partial_mine_top"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/horizontal_bar_bg">
+            <TextView
+                android:id="@+id/text_order_unconfirmed"
+                style="@style/HorizontalItemTextView"
+                android:drawableLeft="@drawable/ic_order_unconfirmed"
+                android:gravity="center_vertical"
+                android:text="@string/mine_order_unconfirmed"/>
+        </FrameLayout>
+
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_80"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/white">
+                <TextView
+                    android:id="@+id/text_wait_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_order_wait_pay"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_tiny"
+                    android:text="@string/mine_order_wait_pay"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/font_normal"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/white">
+                <TextView
+                    android:id="@+id/text_wait_ship"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_order_wait_ship"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_tiny"
+                    android:text="@string/mine_order_wait_ship"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/font_normal"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/white">
+                <TextView
+                    android:id="@+id/text_shipped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_order_shipped"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_tiny"
+                    android:text="@string/mine_order_shipped"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/font_normal"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/white">
+                <TextView
+                    android:id="@+id/text_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_order_history"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_tiny"
+                    android:text="@string/mine_order_history"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/font_normal"/>
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_normal"
-            android:orientation="horizontal">
-
+            android:background="@drawable/horizontal_bar_bg">
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_order_wait_pay"
-                android:gravity="center"
-                android:padding="@dimen/spacing_normal"
-                android:text="@string/order_wait_pay"
-                android:textColor="@color/gray_dark"
-                android:textSize="@dimen/font_normal"/>
+                android:id="@+id/text_manage_address"
+                style="@style/HorizontalItemTextView"
+                android:drawableLeft="@drawable/ic_address"
+                android:gravity="center_vertical"
+                android:text="@string/address_title_manage"/>
+        </FrameLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_order_wait_ship"
-                android:gravity="center"
-                android:padding="@dimen/spacing_normal"
-                android:text="@string/order_wait_ship"
-                android:textColor="@color/gray_dark"
-                android:textSize="@dimen/font_normal"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_order_shipped"
-                android:gravity="center"
-                android:padding="@dimen/spacing_normal"
-                android:text="@string/order_shipped"
-                android:textColor="@color/gray_dark"
-                android:textSize="@dimen/font_normal"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_order_history"
-                android:gravity="center"
-                android:padding="@dimen/spacing_normal"
-                android:text="@string/order_history"
-                android:textColor="@color/gray_dark"
-                android:textSize="@dimen/font_normal"/>
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/text_manage_address"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_54"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:background="@android:color/white"
-            android:drawableLeft="@drawable/ic_address"
-            android:drawablePadding="@dimen/spacing_small"
-            android:drawableRight="@drawable/ic_chevron_right"
-            android:gravity="center_vertical"
-            android:padding="@dimen/spacing_small"
-            android:text="@string/title_manage_address"
-            android:textAppearance="@style/ContentText.Large"/>
 
     </LinearLayout>
 </ScrollView>

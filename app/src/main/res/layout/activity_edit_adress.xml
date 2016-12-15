@@ -185,6 +185,6 @@
         android:layout_marginRight="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_large"
         android:enabled="false"
-        android:text="@string/address_save_and_use"/>
+        android:text="@string/address_action_save_and_use"/>
 
 </LinearLayout>

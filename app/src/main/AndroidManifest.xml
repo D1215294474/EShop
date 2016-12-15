@@ -3,6 +3,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <application
         android:name=".feature.EShopApplication"
         android:allowBackup="true"
@@ -23,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".feature.EShopHomeActivity"
+            android:name=".feature.EShopMainActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".feature.goods.GoodsActivity"
@@ -38,13 +39,22 @@
             android:name=".feature.mine.SignUpActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".feature.order.OrderPreviewActivity"
+            android:name=".feature.order.preview.OrderPreviewActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".feature.address.edit.EditAddressActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".feature.address.manage.ManageAddressActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.order.list.OrderListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.cart.CartActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.settings.SettingsActivity"
             android:screenOrientation="portrait"/>
     </application>
 

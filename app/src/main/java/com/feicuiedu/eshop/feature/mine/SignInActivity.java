@@ -39,7 +39,7 @@ public class SignInActivity extends BaseActivity {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_sign_in);
+        new ToolbarWrapper(this).setCustomTitle(R.string.mine_title_sign_in);
         mProgressWrapper = new ProgressWrapper();
     }
 
@@ -51,7 +51,7 @@ public class SignInActivity extends BaseActivity {
 
         mProgressWrapper.dismissProgress();
         if (success) {
-            ToastWrapper.show(R.string.sign_in_success);
+            ToastWrapper.show(R.string.mine_msg_sign_in_success);
             ApiSignIn.Rsp signInRsp = (ApiSignIn.Rsp) rsp;
             UserManager.getInstance().setUser(
                     signInRsp.getData().getUser(), signInRsp.getData().getSession()

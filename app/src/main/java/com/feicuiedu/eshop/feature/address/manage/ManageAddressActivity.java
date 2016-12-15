@@ -40,7 +40,7 @@ public class ManageAddressActivity extends BaseActivity {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_manage_address);
+        new ToolbarWrapper(this).setCustomTitle(R.string.address_title_manage);
         mProgressWrapper = new ProgressWrapper();
 
         mAddressAdapter = new AddressAdapterImpl();
@@ -96,7 +96,7 @@ public class ManageAddressActivity extends BaseActivity {
 
         @Override protected void onDelete(Address address) {
             if (address.isDefault()) {
-                ToastWrapper.show(R.string.can_not_delete_default_address);
+                ToastWrapper.show(R.string.address_msg_can_not_delete_default);
                 return;
             }
 

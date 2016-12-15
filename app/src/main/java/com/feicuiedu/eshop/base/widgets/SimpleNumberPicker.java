@@ -55,9 +55,9 @@ public class SimpleNumberPicker extends RelativeLayout {
         }
 
         if (getNumber() == mMin) {
-            ivMinus.setImageResource(R.drawable.minus_gray);
+            ivMinus.setImageResource(R.drawable.btn_minus_gray);
         } else {
-            ivMinus.setImageResource(R.drawable.minus);
+            ivMinus.setImageResource(R.drawable.btn_minus);
         }
 
         if (mOnNumberChangedListener != null) {

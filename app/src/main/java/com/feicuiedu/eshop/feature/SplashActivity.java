@@ -37,7 +37,7 @@ public class SplashActivity extends BaseActivity implements Animator.AnimatorLis
     }
 
     @Override public void onAnimationEnd(Animator animation) {
-        Intent intent = new Intent(this, EShopHomeActivity.class);
+        Intent intent = new Intent(this, EShopMainActivity.class);
         startActivity(intent);
         finishWithDefaultTransition();
     }

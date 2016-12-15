@@ -40,7 +40,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_sign_up);
+        new ToolbarWrapper(this).setCustomTitle(R.string.mine_title_sign_up);
         mProgressWrapper = new ProgressWrapper();
     }
 
@@ -52,7 +52,7 @@ public class SignUpActivity extends BaseActivity {
 
         mProgressWrapper.dismissProgress();
         if (success) {
-            ToastWrapper.show(R.string.sign_up_success);
+            ToastWrapper.show(R.string.mine_msg_sign_up_success);
             ApiSignUp.Rsp signUpRsp = (ApiSignUp.Rsp) rsp;
             UserManager.getInstance().setUser(
                     signUpRsp.getData().getUser(),

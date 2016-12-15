@@ -34,7 +34,7 @@
         android:layout_below="@+id/text_goods_price"
         android:layout_marginLeft="@dimen/spacing_normal"
         android:layout_toRightOf="@+id/image_goods"
-        android:text="@string/inventory"
+        android:text="@string/goods_inventory"
         android:textColor="@color/gray_dark"
         android:textSize="@dimen/font_normal"
     />
@@ -59,7 +59,7 @@
         android:layout_alignBottom="@+id/image_goods"
         android:layout_marginLeft="@dimen/spacing_normal"
         android:layout_toRightOf="@+id/image_goods"
-        android:text="@string/number"
+        android:text="@string/cart_number"
         android:textColor="@color/gray_dark"
         android:textSize="@dimen/font_normal"
     />
@@ -91,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_60"
         android:layout_alignParentBottom="true"
-        android:text="@string/ok"/>
+        android:text="@string/action_confirm"/>
 
 
     <ScrollView
@@ -110,7 +110,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/number"
+                android:text="@string/cart_number"
                 android:textAppearance="@style/ContentText.Large"/>
 
             <com.feicuiedu.eshop.base.widgets.SimpleNumberPicker

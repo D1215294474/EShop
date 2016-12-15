@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_action_gear"/>
+        android:src="@drawable/ic_menu_settings"/>
 
     <ImageView
         android:id="@+id/image_avatar"
@@ -21,9 +21,9 @@
         android:layout_marginBottom="@dimen/spacing_huge"
         android:layout_marginLeft="@dimen/spacing_huge"
         android:layout_marginTop="@dimen/spacing_huge"
-        android:background="@drawable/header_bg"
+        android:background="@drawable/image_avatar_bg"
         android:padding="1dp"
-        android:src="@drawable/default_avatar"/>
+        android:src="@drawable/image_default_avatar"/>
 
     <TextView
         android:id="@+id/text_username"
@@ -35,7 +35,7 @@
         android:layout_toRightOf="@id/image_avatar"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/sign_in_or_sign_up"
+        android:text="@string/mine_sign_in_or_sign_up"
         android:textAppearance="@style/AppBarText.Huge"/>
 
 </RelativeLayout>

@@ -46,7 +46,7 @@
             android:drawablePadding="@dimen/spacing_small"
             android:gravity="center_vertical"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/set_default"
+            android:text="@string/address_action_set_default"
             android:textAppearance="@style/ContentText.Normal"/>
 
         <View
@@ -63,7 +63,7 @@
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center_vertical"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/edit"
+            android:text="@string/action_edit"
             android:textAppearance="@style/ContentText.Normal"/>
 
         <TextView
@@ -75,7 +75,7 @@
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center_vertical"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/delete"
+            android:text="@string/action_delete"
             android:textAppearance="@style/ContentText.Normal"/>
     </LinearLayout>
 

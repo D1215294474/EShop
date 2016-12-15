@@ -3,6 +3,9 @@ package com.feicuiedu.eshop.network.core;
 
 public interface ApiPath {
 
+    String COLLECT_CREATE = "/user/collect/create";
+    String ORDER_CANCEL = "/order/cancel";
+    String ORDER_LIST = "/order/list";
     String ORDER_DONE = "/flow/done";
     String ORDER_PREVIEW = "/flow/checkOrder";
     String ADDRESS_INFO = "/address/info";
@@ -23,4 +26,5 @@ public interface ApiPath {
     String SEARCH = "/search";
     String USER_SIGNIN = "/user/signin";
     String USER_SIGNUP = "/user/signup";
+    String USER_INFO = "/user/info";
 }

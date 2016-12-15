@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 主页面.
+ * 首页面.
  */
 public class HomeFragment extends BaseFragment {
 
@@ -41,10 +41,10 @@ public class HomeFragment extends BaseFragment {
     };
 
     private static final int[] PROMOTE_PLACE_HOLDER = {
-            R.drawable.round_purple,
-            R.drawable.round_orange,
-            R.drawable.round_pink,
-            R.drawable.round_yellow
+            R.drawable.mask_round_purple,
+            R.drawable.mask_round_orange,
+            R.drawable.mask_round_pink,
+            R.drawable.mask_round_yellow
     };
 
     public static HomeFragment newInstance() {
@@ -68,7 +68,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_home);
+        new ToolbarWrapper(this).setCustomTitle(R.string.home_title);
 
         mGoodsAdapter = new HomeGoodsAdapter();
         goodsListView.setAdapter(mGoodsAdapter);
@@ -142,26 +142,21 @@ public class HomeFragment extends BaseFragment {
         mTvPromoteGoods.setVisibility(View.VISIBLE);
 
         for (int i = 0; i < mIvPromotes.length; i++) {
+            mIvPromotes[i].setVisibility(View.VISIBLE);
+            final SimpleGoods simpleGoods = simpleGoodsList.get(i);
 
-            if (i < simpleGoodsList.size()) {
-                mIvPromotes[i].setVisibility(View.VISIBLE);
-                final SimpleGoods simpleGoods = simpleGoodsList.get(i);
+            GlideUtils.loadPromote(simpleGoods.getImg(),
+                    mIvPromotes[i],
+                    PROMOTE_PLACE_HOLDER[i],
+                    PROMOTE_COLORS[i]);
 
-                GlideUtils.loadPromote(simpleGoods.getImg(),
-                        mIvPromotes[i],
-                        PROMOTE_PLACE_HOLDER[i],
-                        PROMOTE_COLORS[i]);
-
-                mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
-                        Intent intent = GoodsActivity.getStartIntent(
-                                getContext(), simpleGoods.getId());
-                        getActivity().startActivity(intent);
-                    }
-                });
-            } else {
-                mIvPromotes[i].setVisibility(View.INVISIBLE);
-            }
+            mIvPromotes[i].setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Intent intent = GoodsActivity.getStartIntent(
+                            getContext(), simpleGoods.getId());
+                    getActivity().startActivity(intent);
+                }
+            });
         }
     }
 }

@@ -13,7 +13,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">@dimen/size_45</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/query_order_bg</item>
+        <item name="android:background">@drawable/tab_query_order_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/spacing_large</item>
         <item name="android:paddingRight">@dimen/spacing_large</item>
@@ -57,6 +57,26 @@
         <item name="android:layout_width">@dimen/size_45</item>
         <item name="android:layout_height">@dimen/size_45</item>
         <item name="loading_color">@color/colorAccent</item>
+    </style>
+
+    <style name="GoodsTabTextView">
+        <item name="android:layout_width">@dimen/size_80</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/tab_goods_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/AppBarText.Normal</item>
+    </style>
+
+    <style name="HorizontalItemTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_54</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:drawablePadding">@dimen/spacing_small</item>
+        <item name="android:drawableRight">@drawable/ic_chevron_right</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+        <item name="android:textAppearance">@style/ContentText.Large</item>
+        <item name="android:clickable">true</item>
     </style>
 
     <style name="UserInfoEditText">

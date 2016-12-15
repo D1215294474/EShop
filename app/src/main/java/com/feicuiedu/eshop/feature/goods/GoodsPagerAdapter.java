@@ -28,7 +28,7 @@ public class GoodsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return GoodsInfoFragment.newInstance(mGoodsInfo);
             case 1:
-                return GoodsDetailsFragment.newInstance();
+                return GoodsDetailsFragment.newInstance(mGoodsInfo);
             case 2:
                 return GoodsCommentsFragment.newInstance();
             default:

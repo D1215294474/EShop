@@ -29,6 +29,7 @@ public class AlertWrapper extends DialogFragment {
 
     private Unbinder mUnbinder;
     private View.OnClickListener mConfirmListener;
+    private View.OnClickListener mCancelListener;
     private int mAlertId;
 
     public AlertWrapper() {
@@ -80,11 +81,16 @@ public class AlertWrapper extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.text_cancel:
+                if (mCancelListener != null) {
+                    mCancelListener.onClick(view);
+                }
                 dismiss();
                 break;
             case R.id.text_ok:
                 if (mConfirmListener != null) {
                     mConfirmListener.onClick(view);
+                } else {
+                    dismiss();
                 }
                 break;
             default:
@@ -100,6 +106,11 @@ public class AlertWrapper extends DialogFragment {
 
     public AlertWrapper setConfirmListener(View.OnClickListener confirmListener) {
         mConfirmListener = confirmListener;
+        return this;
+    }
+
+    public AlertWrapper setCancelLisener(View.OnClickListener cancelListener) {
+        mCancelListener = cancelListener;
         return this;
     }
 

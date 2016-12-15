@@ -43,7 +43,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     android:gravity="center"
-                    android:text="@string/total_price"
+                    android:text="@string/cart_total_price"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_large"/>
 
@@ -66,12 +66,47 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/orange"
-                    android:text="@string/summit_order"
+                    android:text="@string/cart_action_summit_order"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_large"/>
 
             </LinearLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_empty_cart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/center_cart"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:src="@drawable/image_empty_cart"
+            />
+
+            <android.support.v4.widget.Space
+                android:id="@+id/center_cart"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:layout_width="@dimen/size_180"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/center_cart"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:gravity="center"
+                android:text="@string/cart_msg_is_empty"
+                android:textAppearance="@style/ContentText.Large"
+                android:textColor="@color/colorAccent"/>
+
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_empty"
@@ -85,7 +120,7 @@
                 android:layout_above="@+id/center"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/spacing_normal"
-                android:src="@drawable/cart_bank"
+                android:src="@drawable/image_empty_cart"
             />
 
             <android.support.v4.widget.Space
@@ -99,10 +134,10 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="@dimen/size_180"
                 android:layout_height="@dimen/size_54"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/center"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:text="@string/to_sign_in"
+                android:text="@string/cart_action_sign_in"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/font_large"/>
 

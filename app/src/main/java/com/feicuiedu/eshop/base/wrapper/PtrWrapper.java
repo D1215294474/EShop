@@ -15,6 +15,12 @@ public abstract class PtrWrapper {
 
     private PtrFrameLayout mRefreshLayout;
 
+    private PtrDefaultHandler mPtrHandler = new PtrDefaultHandler() {
+        @Override public void onRefreshBegin(PtrFrameLayout frame) {
+            onRefresh();
+        }
+    };
+
     public PtrWrapper(Activity activity) {
         mRefreshLayout = ButterKnife.findById(activity, R.id.standard_refresh_layout);
         initPtr();
@@ -39,7 +45,9 @@ public abstract class PtrWrapper {
     }
 
     public void stopRefresh() {
-        mRefreshLayout.refreshComplete();
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.refreshComplete();
+        }
     }
 
     public abstract void onRefresh();
@@ -50,13 +58,7 @@ public abstract class PtrWrapper {
         RefreshHeader refreshHeader = new RefreshHeader(mRefreshLayout.getContext());
         mRefreshLayout.setHeaderView(refreshHeader);
         mRefreshLayout.addPtrUIHandler(refreshHeader);
-        mRefreshLayout.setPtrHandler(new PtrDefaultHandler() {
-            @Override public void onRefreshBegin(PtrFrameLayout frame) {
-                onRefresh();
-            }
-        });
-
-
+        mRefreshLayout.setPtrHandler(mPtrHandler);
     }
 
 }

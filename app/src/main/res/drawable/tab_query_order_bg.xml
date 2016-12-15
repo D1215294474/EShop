@@ -9,7 +9,7 @@
                     <solid android:color="@color/orange"/>
                 </shape>
             </item>
-            <item android:drawable="@android:color/white" android:bottom="2dp"/>
+            <item android:drawable="@android:color/white" android:bottom="@dimen/size_2"/>
         </layer-list>
 
     </item>

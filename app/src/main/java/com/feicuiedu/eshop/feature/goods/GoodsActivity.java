@@ -9,19 +9,29 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseActivity;
+import com.feicuiedu.eshop.base.wrapper.BadgeWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
+import com.feicuiedu.eshop.feature.cart.CartActivity;
 import com.feicuiedu.eshop.feature.goods.comments.GoodsCommentsFragment;
 import com.feicuiedu.eshop.feature.goods.details.GoodsDetailsFragment;
 import com.feicuiedu.eshop.feature.goods.info.GoodsInfoFragment;
+import com.feicuiedu.eshop.feature.mine.SignInActivity;
+import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.api.ApiCartCreate;
 import com.feicuiedu.eshop.network.api.ApiGoodsInfo;
 import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
+import com.feicuiedu.eshop.network.event.CartEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -53,9 +63,12 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @BindViews({R.id.text_tab_goods, R.id.text_tab_details, R.id.text_tab_comments})
     List<TextView> tvTabList;
     @BindView(R.id.pager_goods) ViewPager goodsPager;
+    @BindView(R.id.button_show_cart) ImageButton btnCart;
 
+    private BadgeWrapper mBadgeView;
     private GoodsInfo mGoodsInfo;
     private GoodsSpecPopupWindow mGoodsSpecPopupWindow;
+    private boolean mBuy;
 
     @Override protected int getContentViewLayout() {
         return R.layout.activity_goods;
@@ -65,6 +78,8 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
         new ToolbarWrapper(this);
         goodsPager.addOnPageChangeListener(this);
 
+        mBadgeView = new BadgeWrapper(btnCart);
+
         // 获取商品信息.
         int goodsId = getIntent().getIntExtra(EXTRA_GOODS_ID, 0);
         enqueue(new ApiGoodsInfo(goodsId));
@@ -72,15 +87,29 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-        if (!ApiPath.GOODS.equals(apiPath)) {
-            throw new UnsupportedOperationException(apiPath);
-        }
 
-        if (success) {
-            ApiGoodsInfo.Rsp goodsRsp = (ApiGoodsInfo.Rsp) rsp;
-            mGoodsInfo = goodsRsp.getData();
-            goodsPager.setAdapter(new GoodsPagerAdapter(getSupportFragmentManager(), mGoodsInfo));
-            chooseTab(0);
+        switch (apiPath) {
+            case ApiPath.GOODS:
+                if (success) {
+                    ApiGoodsInfo.Rsp goodsRsp = (ApiGoodsInfo.Rsp) rsp;
+                    mGoodsInfo = goodsRsp.getData();
+                    goodsPager.setAdapter(new GoodsPagerAdapter(getSupportFragmentManager(), mGoodsInfo));
+                    chooseTab(0);
+                }
+                break;
+            case ApiPath.CART_CREATE:
+                mGoodsSpecPopupWindow.dismiss();
+                UserManager.getInstance().retrieveCartList();
+                if (mBuy) {
+                    Intent intent = new Intent(this, CartActivity.class);
+                    startActivity(intent);
+                } else {
+                    ToastWrapper.show(R.string.goods_msg_add_success);
+                }
+
+                break;
+            default:
+                throw new UnsupportedOperationException(apiPath);
         }
     }
 
@@ -92,10 +121,19 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_share) {
-            ToastWrapper.show(R.string.share);
+            ToastWrapper.show(R.string.action_share);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(CartEvent cartEvent) {
+        if (UserManager.getInstance().hasCart()) {
+            mBadgeView.showNumber(UserManager.getInstance().getCartGoodsList().size());
+        } else {
+            mBadgeView.hide();
+        }
     }
 
     @Override
@@ -123,20 +161,31 @@ public class GoodsActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @OnClick({R.id.button_show_cart, R.id.button_add_cart, R.id.button_buy})
     void onClick(View view) {
+        if (!UserManager.getInstance().hasUser()) {
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+            return;
+        }
         switch (view.getId()) {
             case R.id.button_show_cart:
+                Intent cart = new Intent(this, CartActivity.class);
+                startActivity(cart);
                 break;
             case R.id.button_add_cart:
-
+            case R.id.button_buy:
                 if (mGoodsInfo == null) return;
 
                 if (mGoodsSpecPopupWindow == null) {
                     mGoodsSpecPopupWindow = new GoodsSpecPopupWindow(this, mGoodsInfo);
                 }
-                mGoodsSpecPopupWindow.show();
 
-                break;
-            case R.id.button_buy:
+                mBuy = view.getId() == R.id.button_buy;
+                mGoodsSpecPopupWindow.show(new GoodsSpecPopupWindow.OnConfirmListener() {
+                    @Override public void onConfirm(int number) {
+                        ApiCartCreate apiCartCreate = new ApiCartCreate(mGoodsInfo.getId(), number);
+                        enqueue(apiCartCreate);
+                    }
+                });
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported View Id");

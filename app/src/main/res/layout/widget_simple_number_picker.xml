@@ -7,7 +7,7 @@
         android:id="@+id/image_minus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/minus"/>
+        android:src="@drawable/btn_minus"/>
 
     <TextView
         android:id="@+id/text_number"
@@ -16,7 +16,7 @@
         android:layout_alignBottom="@+id/image_minus"
         android:layout_alignTop="@id/image_minus"
         android:layout_toRightOf="@id/image_minus"
-        android:background="@drawable/number"
+        android:background="@drawable/text_number_bg"
         android:gravity="center"
         android:lines="1"
         android:text="1"
@@ -28,5 +28,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/text_number"
-        android:src="@drawable/plus"/>
+        android:src="@drawable/btn_plus"/>
 </merge>

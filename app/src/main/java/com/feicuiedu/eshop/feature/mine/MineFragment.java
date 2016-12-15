@@ -7,8 +7,12 @@ import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
+import com.feicuiedu.eshop.base.wrapper.BadgeWrapper;
 import com.feicuiedu.eshop.feature.address.manage.ManageAddressActivity;
+import com.feicuiedu.eshop.feature.order.list.OrderListActivity;
+import com.feicuiedu.eshop.feature.settings.SettingsActivity;
 import com.feicuiedu.eshop.network.UserManager;
+import com.feicuiedu.eshop.network.api.ApiOrderList;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.User;
 import com.feicuiedu.eshop.network.event.UserEvent;
@@ -27,12 +31,23 @@ public class MineFragment extends BaseFragment {
 
     @BindView(R.id.text_username) TextView tvName;
 
+    @BindView(R.id.text_wait_pay) TextView tvWaitPay;
+    @BindView(R.id.text_wait_ship) TextView tvWaitShip;
+    @BindView(R.id.text_shipped) TextView tvShipped;
+    @BindView(R.id.text_history) TextView tvHistory;
+
+    private BadgeWrapper mWaitPayBadge;
+    private BadgeWrapper mWaitShipBadge;
+    private BadgeWrapper mShippedBadge;
+
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_mine;
     }
 
     @Override protected void initView() {
-
+        mWaitPayBadge = new BadgeWrapper(tvWaitPay);
+        mWaitShipBadge = new BadgeWrapper(tvWaitShip);
+        mShippedBadge = new BadgeWrapper(tvShipped);
     }
 
     @Override
@@ -42,16 +57,31 @@ public class MineFragment extends BaseFragment {
 
     @Override public void onEvent(UserEvent event) {
         super.onEvent(event);
-        User user = UserManager.getInstance().getUser();
-
-        if (user == null) {
-            tvName.setText(R.string.sign_in_or_sign_up);
-        } else {
+        if (UserManager.getInstance().hasUser()) {
+            User user = UserManager.getInstance().getUser();
             tvName.setText(user.getName());
+
+            mWaitPayBadge.showNumber(user.getOrderNum().getAwaitPay());
+            mWaitShipBadge.showNumber(user.getOrderNum().getAwaitShip());
+            mShippedBadge.showNumber(user.getOrderNum().getShipped());
+
+        } else {
+            tvName.setText(R.string.mine_sign_in_or_sign_up);
+            mWaitPayBadge.hide();
+            mWaitShipBadge.hide();
+            mShippedBadge.hide();
         }
     }
 
-    @OnClick({R.id.text_username, R.id.text_manage_address}) void onClick(View view) {
+    @OnClick({
+            R.id.text_username,
+            R.id.text_manage_address,
+            R.id.text_wait_pay,
+            R.id.text_order_unconfirmed,
+            R.id.text_wait_ship,
+            R.id.text_shipped,
+            R.id.text_history
+    }) void onClick(View view) {
 
         if (!UserManager.getInstance().hasUser()) {
             Intent intent = new Intent(getContext(), SignInActivity.class);
@@ -63,8 +93,33 @@ public class MineFragment extends BaseFragment {
             case R.id.text_username:
                 break;
             case R.id.text_manage_address:
-                Intent intent = new Intent(getContext(), ManageAddressActivity.class);
-                startActivity(intent);
+                Intent manageAddress = new Intent(getContext(), ManageAddressActivity.class);
+                startActivity(manageAddress);
+                break;
+            case R.id.text_wait_pay:
+                Intent waitPay = OrderListActivity
+                        .getStartIntent(getContext(), ApiOrderList.ORDER_AWAIT_PAY);
+                startActivity(waitPay);
+                break;
+            case R.id.text_order_unconfirmed:
+                Intent unconfirmed = OrderListActivity
+                        .getStartIntent(getContext(), ApiOrderList.ORDER_UNCONFIRMED);
+                startActivity(unconfirmed);
+                break;
+            case R.id.text_wait_ship:
+                Intent waitShip = OrderListActivity
+                        .getStartIntent(getContext(), ApiOrderList.ORDER_AWAIT_SHIP);
+                startActivity(waitShip);
+                break;
+            case R.id.text_shipped:
+                Intent shipped = OrderListActivity
+                        .getStartIntent(getContext(), ApiOrderList.ORDER_SHIPPED);
+                startActivity(shipped);
+                break;
+            case R.id.text_history:
+                Intent history = OrderListActivity
+                        .getStartIntent(getContext(), ApiOrderList.ORDER_FINISHED);
+                startActivity(history);
                 break;
             default:
                 throw new UnsupportedOperationException();
@@ -73,7 +128,8 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick(R.id.button_setting) void navigateToSettings() {
-        UserManager.getInstance().clear();
+        Intent intent = new Intent(getContext(), SettingsActivity.class);
+        getActivity().startActivity(intent);
     }
 
 }

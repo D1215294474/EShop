@@ -26,35 +26,35 @@ public abstract class CartGoodsAdapter extends
         return new ViewHolder(itemView);
     }
 
-    @Override
-    protected void bindItem(int position, final CartGoods item, ViewHolder viewHolder) {
-        viewHolder.tvName.setText(item.getGoodsName());
-        viewHolder.tvPrice.setText(item.getTotalPrice());
-        viewHolder.numberPicker.setNumber(item.getGoodsNumber());
+    public abstract void numberChanged(CartGoods goods, int number);
 
-        viewHolder.numberPicker
-                .setOnNumberChangedListener(new SimpleNumberPicker.OnNumberChangedListener() {
-                    @Override public void onNumberChanged(int number) {
-                        numberChanged(item, number);
-                    }
-                });
-
-        Picture picture = item.getImg();
-
-        GlideUtils.loadPicture(picture, viewHolder.ivGoods);
-    }
-
-    public static class ViewHolder extends BaseListAdapter.ViewHolder {
+    class ViewHolder extends BaseListAdapter.ViewHolder
+            implements SimpleNumberPicker.OnNumberChangedListener {
 
         @BindView(R.id.image_goods) ImageView ivGoods;
         @BindView(R.id.text_goods_name) TextView tvName;
         @BindView(R.id.text_goods_price) TextView tvPrice;
         @BindView(R.id.number_picker) SimpleNumberPicker numberPicker;
 
-        public ViewHolder(View itemView) {
+        private CartGoods mItem;
+
+        ViewHolder(View itemView) {
             super(itemView);
+            numberPicker.setOnNumberChangedListener(this);
+        }
+
+        @Override protected void bind(int position) {
+            mItem = getItem(position);
+            tvName.setText(mItem.getGoodsName());
+            tvPrice.setText(mItem.getTotalPrice());
+            numberPicker.setNumber(mItem.getGoodsNumber());
+
+            Picture picture = mItem.getImg();
+            GlideUtils.loadPicture(picture, ivGoods);
+        }
+
+        @Override public void onNumberChanged(int number) {
+            numberChanged(mItem, number);
         }
     }
-
-    public abstract void numberChanged(CartGoods goods, int number);
 }

@@ -1,6 +1,7 @@
 package com.feicuiedu.eshop.base;
 
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -41,9 +42,8 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
         View itemView = createItemViewIfNotExist(convertView, parent);
 
         // noinspection unchecked
-        V viewHolder = (V) itemView.getTag();
-        bindItem(position, getItem(position), viewHolder);
-
+        ViewHolder viewHolder = (ViewHolder) itemView.getTag();
+        viewHolder.bind(position);
         return itemView;
     }
 
@@ -62,8 +62,6 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
 
     protected abstract V getItemViewHolder(View itemView);
 
-    protected abstract void bindItem(int position, T item, V viewHolder);
-
     private View createItemViewIfNotExist(View itemView, ViewGroup parent) {
         if (itemView == null) {
             itemView = LayoutInflater.from(parent.getContext())
@@ -73,14 +71,20 @@ public abstract class BaseListAdapter<T, V extends BaseListAdapter.ViewHolder> e
         return itemView;
     }
 
-    public abstract static class ViewHolder {
+    public abstract class ViewHolder {
 
-        public final View itemView;
+        protected final View mItemView;
 
-        public ViewHolder(View itemView) {
+        protected ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
-            this.itemView = itemView;
+            this.mItemView = itemView;
         }
+
+        protected final Context getContext() {
+            return mItemView.getContext();
+        }
+
+        protected abstract void bind(int position);
     }
 
 }

@@ -16,7 +16,7 @@ import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.address.edit.EditAddressActivity;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.feature.mine.SignInActivity;
-import com.feicuiedu.eshop.feature.order.OrderPreviewActivity;
+import com.feicuiedu.eshop.feature.order.preview.OrderPreviewActivity;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiCartDelete;
 import com.feicuiedu.eshop.network.api.ApiCartUpdate;
@@ -46,6 +46,7 @@ public class CartFragment extends BaseFragment {
     @BindView(R.id.list_cart_goods) ListView cartListView; // 购物车商品列表.
     @BindView(R.id.text_total_price) TextView tvTotalPrice; // 商品总价.
     @BindView(R.id.layout_empty) ViewGroup emptyLayout; // 未登录时显示的空页面.
+    @BindView(R.id.layout_empty_cart) ViewGroup emptyCartLayout;
 
     private CartGoodsAdapter mGoodsAdapter; // 商品列表的适配器.
     private PtrWrapper mPtrWrapper; // 下拉刷新包装类.
@@ -57,7 +58,7 @@ public class CartFragment extends BaseFragment {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_shopping_cart);
+        new ToolbarWrapper(this).setCustomTitle(R.string.cart_title);
 
         mGoodsAdapter = new CartGoodsAdapter() {
             @Override public void numberChanged(CartGoods goods, int number) {
@@ -105,9 +106,9 @@ public class CartFragment extends BaseFragment {
         if (UserManager.getInstance().hasCart()) {
             mGoodsAdapter.reset(UserManager.getInstance().getCartGoodsList());
             tvTotalPrice.setText(UserManager.getInstance().getCartBill().getGoodsPrice());
+            emptyCartLayout.setVisibility(View.INVISIBLE);
         } else {
-            mGoodsAdapter.reset(null);
-            tvTotalPrice.setText("0");
+            emptyCartLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,7 +142,7 @@ public class CartFragment extends BaseFragment {
     @OnItemLongClick(R.id.list_cart_goods) boolean onItemLongClick(int position) {
         // 弹出删除商品对话框.
         final CartGoods cartGoods = mGoodsAdapter.getItem(position);
-        mAlertWrapper.setAlertText(R.string.confirm_delete_goods)
+        mAlertWrapper.setAlertText(R.string.cart_msg_delete_goods)
                 .setConfirmListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         mAlertWrapper.dismiss();

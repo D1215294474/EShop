@@ -48,7 +48,7 @@ public class CategoryFragment extends BaseFragment {
         new ToolbarWrapper(this)
                 .setShowBack(false)
                 .setShowTitle(false)
-                .setCustomTitle(R.string.title_category);
+                .setCustomTitle(R.string.category_title);
 
         mCategoryAdapter = new CategoryAdapter();
         categoryListView.setAdapter(mCategoryAdapter);

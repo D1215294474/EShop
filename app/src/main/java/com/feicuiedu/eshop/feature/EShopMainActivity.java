@@ -25,13 +25,13 @@ import butterknife.BindView;
 /**
  * <p> App主页面Activity, 用来管理四个Fragment, 依次是:
  * <ol>
- * <li/> 主页面: {@link HomeFragment}
+ * <li/> 首页面: {@link HomeFragment}
  * <li/> 分类页面: {@link CategoryFragment}
  * <li/> 购物车页面: {@link CartFragment}
  * <li/> 我的页面: {@link MineFragment}
  * </ol>
  */
-public class EShopHomeActivity extends BaseActivity implements OnTabSelectListener {
+public class EShopMainActivity extends BaseActivity implements OnTabSelectListener {
 
     @BindView(R.id.bottom_bar) BottomBar bottomBar;
 
@@ -40,10 +40,11 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
     private CartFragment mCartFragment;
     private MineFragment mMineFragment;
 
+    // 当前正在显示的Fragment
     private Fragment mCurrentFragment;
 
     @Override protected int getContentViewLayout() {
-        return R.layout.activity_eshop_home;
+        return R.layout.activity_eshop_main;
     }
 
     @Override protected void initView() {
@@ -55,7 +56,7 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
 
     @Override
     protected void onBusinessResponse(String apiPath, boolean success, ResponseEntity rsp) {
-
+        // 主页面只负责四个Fragment的切换, 没有业务逻辑的处理.
     }
 
     @Override public void onTabSelected(@IdRes int tabId) {
@@ -94,7 +95,7 @@ public class EShopHomeActivity extends BaseActivity implements OnTabSelectListen
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(CartEvent event) {
-
+        // 如果购物车数据发生变更, 需要更新BottomBar的角标
         if (UserManager.getInstance().hasCart()) {
             int total = UserManager.getInstance().getCartBill().getGoodsCount();
             bottomBar.getTabAtPosition(2).setBadgeCount(total);

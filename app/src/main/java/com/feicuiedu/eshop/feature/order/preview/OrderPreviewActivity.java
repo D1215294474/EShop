@@ -1,4 +1,4 @@
-package com.feicuiedu.eshop.feature.order;
+package com.feicuiedu.eshop.feature.order.preview;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import com.feicuiedu.eshop.base.wrapper.AlertWrapper;
 import com.feicuiedu.eshop.base.wrapper.ProgressWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToolbarWrapper;
 import com.feicuiedu.eshop.feature.address.manage.ManageAddressActivity;
+import com.feicuiedu.eshop.feature.goods.GoodsActivity;
 import com.feicuiedu.eshop.network.UserManager;
 import com.feicuiedu.eshop.network.api.ApiOrderDone;
 import com.feicuiedu.eshop.network.api.ApiOrderPreview;
@@ -38,6 +39,8 @@ import butterknife.OnClick;
  */
 public class OrderPreviewActivity extends BaseActivity {
 
+    private static final String PAYMENT_CASH_ON_DELIVERY = "cod"; //货到付款
+
     @BindView(R.id.text_consignee) TextView tvConsignee;
     @BindView(R.id.text_address) TextView tvAddress;
     @BindView(R.id.layout_goods) LinearLayout goodsLayout;
@@ -54,6 +57,7 @@ public class OrderPreviewActivity extends BaseActivity {
     private ProgressWrapper mProgressWrapper;
 
     private int mPaymentId;
+    private String mPaymentCode;
     private int mShippingId;
 
     @Override protected int getContentViewLayout() {
@@ -61,7 +65,7 @@ public class OrderPreviewActivity extends BaseActivity {
     }
 
     @Override protected void initView() {
-        new ToolbarWrapper(this).setCustomTitle(R.string.title_order_preview);
+        new ToolbarWrapper(this).setCustomTitle(R.string.order_title_preview);
         mAlertWrapper = new AlertWrapper();
         mProgressWrapper = new ProgressWrapper();
         mProgressWrapper.showProgress(this);
@@ -87,7 +91,26 @@ public class OrderPreviewActivity extends BaseActivity {
                 tvShippingPrice.setText(getString(R.string.order_shipping_price, ""));
                 break;
             case ApiPath.ORDER_DONE:
-                mAlertWrapper.setAlertText(R.string.alert_purchase_order).showAlert(this);
+                UserManager.getInstance().retrieveUserInfo();
+                UserManager.getInstance().retrieveCartList();
+
+                if (PAYMENT_CASH_ON_DELIVERY.equals(mPaymentCode)) {
+                    finish();
+                    return;
+                }
+
+                mAlertWrapper.setAlertText(R.string.order_msg_purchase_now)
+                        .setConfirmListener(new View.OnClickListener() {
+                            @Override public void onClick(View v) {
+
+                            }
+                        })
+                        .setCancelLisener(new View.OnClickListener() {
+                            @Override public void onClick(View v) {
+                                finish();
+                            }
+                        })
+                        .showAlert(this);
                 break;
             default:
                 throw new UnsupportedOperationException(apiPath);
@@ -111,13 +134,14 @@ public class OrderPreviewActivity extends BaseActivity {
         if (mPaymentList == null) return;
 
         new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_payment)
+                .setTitle(R.string.order_choose_payment)
                 .setItems(paymentsToStrings(mPaymentList), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Payment payment = mPaymentList.get(which);
                         mPaymentId = payment.getId();
+                        mPaymentCode = payment.getCode();
                         tvPayment.setText(
-                                getString(R.string.payment_name, payment.getName())
+                                getString(R.string.order_payment_name, payment.getName())
                         );
                         checkSummitEnabled();
                     }
@@ -130,13 +154,13 @@ public class OrderPreviewActivity extends BaseActivity {
         if (mShippingList == null) return;
 
         new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_shipping)
+                .setTitle(R.string.order_choose_shipping)
                 .setItems(shippingsToStrings(mShippingList), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Shipping shipping = mShippingList.get(which);
                         mShippingId = shipping.getId();
                         tvShipping.setText(
-                                getString(R.string.shipping_name, shipping.getName())
+                                getString(R.string.order_shipping_name, shipping.getName())
                         );
                         tvShippingPrice.setText(
                                 getString(R.string.order_shipping_price, shipping.getPrice())
@@ -156,7 +180,7 @@ public class OrderPreviewActivity extends BaseActivity {
 
     private void showAddress(Address address) {
         tvConsignee.setText(
-                getString(R.string.consignee_name, address.getConsignee())
+                getString(R.string.order_consignee_name, address.getConsignee())
         );
         tvAddress.setText(
                 String.format("(%s)%s%s - %s",
@@ -208,15 +232,23 @@ public class OrderPreviewActivity extends BaseActivity {
         @BindView(R.id.text_goods_name) TextView tvName;
         @BindView(R.id.text_amount) TextView tvAmount;
 
+        private CartGoods mCartGoods;
+
         public GoodsItemHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
         public void bind(CartGoods cartGoods) {
-            tvName.setText(cartGoods.getGoodsName());
-            tvAmount.setText(
-                    getString(R.string.order_goods_amount, cartGoods.getGoodsNumber())
-            );
+            mCartGoods = cartGoods;
+            tvName.setText(mCartGoods.getGoodsName());
+            int number = mCartGoods.getGoodsNumber();
+            tvAmount.setText(getString(R.string.order_goods_amount, number));
+        }
+
+        @OnClick void onClick() {
+            Intent intent = GoodsActivity
+                    .getStartIntent(OrderPreviewActivity.this, mCartGoods.getGoodsId());
+            startActivity(intent);
         }
     }
 

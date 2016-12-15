@@ -26,7 +26,7 @@ public abstract class BaseActivity extends TransitionActivity {
 
     private Unbinder mUnbinder;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewLayout());
         mUnbinder = ButterKnife.bind(this);
@@ -34,7 +34,7 @@ public abstract class BaseActivity extends TransitionActivity {
         EventBus.getDefault().register(this);
     }
 
-    @Override protected void onDestroy() {
+    @Override protected final void onDestroy() {
         super.onDestroy();
         EShopClient.getInstance().cancelByTag(getClass().getSimpleName());
         EventBus.getDefault().unregister(this);

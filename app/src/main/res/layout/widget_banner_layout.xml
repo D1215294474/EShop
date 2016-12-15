@@ -16,7 +16,7 @@
         android:layout_height="@dimen/size_45"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:ci_drawable="@drawable/yellow_radius"
+        app:ci_drawable="@drawable/indicator_yellow_radius"
         app:ci_drawable_unselected="@drawable/white_radius"/>
 
 </merge>

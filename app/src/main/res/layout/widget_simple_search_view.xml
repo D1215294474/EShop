@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@null"
-        android:hint="@string/enter_query_goods"
+        android:hint="@string/search_hint"
         android:singleLine="true"
         android:textAppearance="@style/ContentText.Normal"/>
 

@@ -71,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:background="@android:color/white"
                 android:orientation="vertical"/>
 
             <TextView
@@ -83,7 +84,7 @@
                 android:drawableRight="@drawable/ic_chevron_right"
                 android:gravity="center_vertical"
                 android:padding="@dimen/spacing_small"
-                android:text="@string/payment"
+                android:text="@string/order_payment"
                 android:textAppearance="@style/ContentText.Large"/>
 
             <TextView
@@ -96,7 +97,7 @@
                 android:drawableRight="@drawable/ic_chevron_right"
                 android:gravity="center_vertical"
                 android:padding="@dimen/spacing_small"
-                android:text="@string/shipping"
+                android:text="@string/order_shipping"
                 android:textAppearance="@style/ContentText.Large"/>
 
             <TextView
@@ -126,16 +127,15 @@
             <Button
                 android:id="@+id/button_summit"
                 style="@style/UserInfoButton"
-                android:layout_marginTop="@dimen/spacing_large"
                 android:layout_marginLeft="@dimen/spacing_normal"
                 android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:enabled="false"
-                android:text="@string/summit_order"/>
+                android:text="@string/action_submit"/>
         </LinearLayout>
 
 
     </ScrollView>
-
 
 
 </LinearLayout>

@@ -89,7 +89,7 @@ public class EditAddressActivity extends BaseActivity {
         }
 
         new ToolbarWrapper(this).setCustomTitle(
-                mAddress == null ? R.string.title_add_address : R.string.title_edit_address
+                mAddress == null ? R.string.address_title_add : R.string.address_title_edit
         );
 
         if (mAddress != null) {
@@ -117,7 +117,7 @@ public class EditAddressActivity extends BaseActivity {
             case ApiPath.ADDRESS_ADD:
                 UserManager.getInstance().retrieveAddressList();
                 if (success) {
-                    ToastWrapper.show(R.string.add_address_success);
+                    ToastWrapper.show(R.string.address_msg_add_success);
                     finish();
                 }
                 break;
@@ -132,7 +132,7 @@ public class EditAddressActivity extends BaseActivity {
             case ApiPath.ADDRESS_UPDATE:
                 UserManager.getInstance().retrieveAddressList();
                 if (success) {
-                    ToastWrapper.show(R.string.edit_address_success);
+                    ToastWrapper.show(R.string.address_msg_edit_success);
                     finish();
                 }
                 break;
@@ -217,7 +217,7 @@ public class EditAddressActivity extends BaseActivity {
 
     private void showSelectProvince() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_province)
+                .setTitle(R.string.address_choose_province)
                 .setItems(regionsToStrings(mProvinceList), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Region region = mProvinceList.get(which);
@@ -233,7 +233,7 @@ public class EditAddressActivity extends BaseActivity {
 
     private void showSelectCity() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_city)
+                .setTitle(R.string.address_choose_city)
                 .setItems(regionsToStrings(mCityList), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Region region = mCityList.get(which);
@@ -248,7 +248,7 @@ public class EditAddressActivity extends BaseActivity {
 
     private void showSelectDistrict() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_district)
+                .setTitle(R.string.address_choose_district)
                 .setItems(regionsToStrings(mDistrictList), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         Region region = mDistrictList.get(which);

@@ -13,6 +13,8 @@ public class Payment {
 
     @SerializedName("format_pay_fee") private String mPrice;
 
+    @SerializedName("pay_code") private String mCode;
+
     public int getId() {
         return mId;
     }
@@ -23,5 +25,9 @@ public class Payment {
 
     public String getPrice() {
         return mPrice;
+    }
+
+    public String getCode() {
+        return mCode;
     }
 }

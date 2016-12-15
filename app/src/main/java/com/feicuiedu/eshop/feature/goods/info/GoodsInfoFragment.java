@@ -87,4 +87,10 @@ public class GoodsInfoFragment extends BaseFragment {
         GoodsActivity activity = (GoodsActivity) getActivity();
         activity.selectPage(2);
     }
+
+    @OnClick(R.id.text_goods_details) void changeToDetails() {
+        // 切换到商品详情Fragment
+        GoodsActivity activity = (GoodsActivity) getActivity();
+        activity.selectPage(1);
+    }
 }

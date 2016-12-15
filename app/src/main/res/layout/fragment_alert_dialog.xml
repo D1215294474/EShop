@@ -3,7 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:background="@drawable/alert_dialog_bg"
+             android:background="@drawable/dialog_alert_bg"
              android:orientation="vertical">
 
     <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/cancel"
+                android:text="@string/action_cancel"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_large"/>
 
@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/ok"
+                android:text="@string/action_confirm"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/font_large"/>
 
