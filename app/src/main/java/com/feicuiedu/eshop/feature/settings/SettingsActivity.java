@@ -1,6 +1,7 @@
 package com.feicuiedu.eshop.feature.settings;
 
 
+import android.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +25,10 @@ public class SettingsActivity extends BaseActivity {
 
     @Override protected void initView() {
         new ToolbarWrapper(this).setCustomTitle(R.string.settings_title);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.container, new SettingsFragment());
+        transaction.commit();
     }
 
     @Override
@@ -37,7 +42,7 @@ public class SettingsActivity extends BaseActivity {
         if (UserManager.getInstance().hasUser()) {
             btnSignOut.setVisibility(View.VISIBLE);
         } else {
-            btnSignOut.setVisibility(View.GONE);
+            btnSignOut.setVisibility(View.INVISIBLE);
         }
     }
 

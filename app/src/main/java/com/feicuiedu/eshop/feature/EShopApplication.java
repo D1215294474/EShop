@@ -2,7 +2,9 @@ package com.feicuiedu.eshop.feature;
 
 
 import android.app.Application;
+import android.preference.PreferenceManager;
 
+import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -20,5 +22,7 @@ public class EShopApplication extends Application {
         LeakCanary.install(this);
 
         ToastWrapper.init(this);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 }

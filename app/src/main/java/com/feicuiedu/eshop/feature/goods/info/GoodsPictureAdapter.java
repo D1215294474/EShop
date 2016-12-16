@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 商品图片的适配器, 用于{@link GoodsInfoFragment}.
  */
-public class GoodsPictureAdapter extends PagerAdapter {
+public abstract class GoodsPictureAdapter extends PagerAdapter {
 
 
     private final List<Picture> mPictureList = new ArrayList<>();
@@ -34,14 +34,19 @@ public class GoodsPictureAdapter extends PagerAdapter {
     }
 
     @Override public Object instantiateItem(ViewGroup container, int position) {
-
         LayoutInflater inflater = LayoutInflater.from(container.getContext());
-        ImageView imageView = (ImageView) inflater.inflate(
-                R.layout.item_goods_picture, container, false);
+        ImageView imageView = (ImageView) inflater
+                .inflate(R.layout.item_goods_picture, container, false);
         container.addView(imageView);
 
-        Picture picture = mPictureList.get(position);
+        final Picture picture = mPictureList.get(position);
         GlideUtils.loadFullPicture(picture, imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onImageClicked(picture);
+            }
+        });
 
         return imageView;
     }
@@ -50,6 +55,8 @@ public class GoodsPictureAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) object;
         container.removeView(imageView);
     }
+
+    public abstract void onImageClicked(Picture picture);
 
 }
 

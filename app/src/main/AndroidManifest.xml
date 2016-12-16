@@ -59,6 +59,9 @@
         <activity
             android:name=".feature.collect.CollectActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.help.HelpActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import com.feicuiedu.eshop.base.BaseFragment;
 import com.feicuiedu.eshop.base.wrapper.BadgeWrapper;
 import com.feicuiedu.eshop.feature.address.manage.ManageAddressActivity;
 import com.feicuiedu.eshop.feature.collect.CollectActivity;
+import com.feicuiedu.eshop.feature.help.HelpActivity;
 import com.feicuiedu.eshop.feature.order.list.OrderListActivity;
 import com.feicuiedu.eshop.feature.settings.SettingsActivity;
 import com.feicuiedu.eshop.network.UserManager;
@@ -82,7 +83,7 @@ public class MineFragment extends BaseFragment {
             R.id.text_wait_ship,
             R.id.text_shipped,
             R.id.text_history,
-            R.id.text_favorite
+            R.id.text_favorite,
     }) void onClick(View view) {
 
         if (!UserManager.getInstance().hasUser()) {
@@ -135,6 +136,11 @@ public class MineFragment extends BaseFragment {
 
     @OnClick(R.id.button_setting) void navigateToSettings() {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    @OnClick(R.id.text_help) void navigateToHelp() {
+        Intent intent = new Intent(getContext(), HelpActivity.class);
         getActivity().startActivity(intent);
     }
 

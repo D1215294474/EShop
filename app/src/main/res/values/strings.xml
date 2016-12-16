@@ -62,6 +62,8 @@
     <string name="mine_order_shipped">已发货</string>
     <string name="mine_order_history">历史</string>
     <string name="mine_order_unconfirmed">待确认订单</string>
+    <string name="mine_favorite">我的收藏</string>
+    <string name="mine_help">帮助</string>
 
     <string name="address_title_add">新增地址</string>
     <string name="address_title_edit">编辑地址</string>
@@ -113,7 +115,6 @@
 
     <string name="collect_title">收藏列表</string>
     <string name="collect_msg_already_collected">本商品已收藏</string>
-    <string name="collect_my_favorite">我的收藏</string>
     <string name="collect_grid">网格</string>
     <string name="collect_list">列表</string>
     <string name="collect_msg_confirm_delete">是否取消收藏?</string>
@@ -121,6 +122,13 @@
 
     <string name="settings_title">设&#160;&#160;置</string>
     <string name="settings_action_sign_out">退出账号</string>
+    <string name="settings_category_app">应用设置</string>
+    <string name="settings_category_about">关于我们</string>
+    <string name="settings_pref_auto_signin">自动登录</string>
+    <string name="settings_pref_not_exit">退出时最小化</string>
+    <string name="settings_pref_show_full_picture">显示高清图</string>
+    <string name="settings_pref_official_website">浏览官网</string>
+    <string name="settings_pref_custom_service_tel">客服电话</string>
 
     <string name="action_share">分享</string>
     <string name="action_confirm">确认</string>

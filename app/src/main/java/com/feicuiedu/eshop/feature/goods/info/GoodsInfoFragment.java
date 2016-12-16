@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.feicuiedu.eshop.R;
 import com.feicuiedu.eshop.base.BaseFragment;
+import com.feicuiedu.eshop.base.wrapper.PhotoWrapper;
 import com.feicuiedu.eshop.base.wrapper.ProgressWrapper;
 import com.feicuiedu.eshop.base.wrapper.ToastWrapper;
 import com.feicuiedu.eshop.feature.goods.GoodsActivity;
@@ -21,6 +22,7 @@ import com.feicuiedu.eshop.network.api.ApiCollectCreate;
 import com.feicuiedu.eshop.network.core.ApiPath;
 import com.feicuiedu.eshop.network.core.ResponseEntity;
 import com.feicuiedu.eshop.network.entity.GoodsInfo;
+import com.feicuiedu.eshop.network.entity.Picture;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
@@ -59,6 +61,7 @@ public class GoodsInfoFragment extends BaseFragment {
 
     private GoodsInfo mGoodsInfo;
     private ProgressWrapper mProgressWrapper;
+    private PhotoWrapper mPhotoWrapper;
 
     @Override protected int getContentViewLayout() {
         return R.layout.fragment_goods_info;
@@ -66,13 +69,19 @@ public class GoodsInfoFragment extends BaseFragment {
 
     @Override protected void initView() {
         mProgressWrapper = new ProgressWrapper();
+        mPhotoWrapper = new PhotoWrapper();
 
         // 获取传入的商品信息实体
         String str = getArguments().getString(ARGUMENT_GOODS_INFO);
         mGoodsInfo = new Gson().fromJson(str, GoodsInfo.class);
 
         // 设置显示商品图片的ViewPager
-        GoodsPictureAdapter adapter = new GoodsPictureAdapter(mGoodsInfo.getPictures());
+        GoodsPictureAdapter adapter = new GoodsPictureAdapter(mGoodsInfo.getPictures()) {
+
+            @Override public void onImageClicked(Picture picture) {
+                mPhotoWrapper.showPhoto(GoodsInfoFragment.this, picture.getLarge());
+            }
+        };
         picturesPager.setAdapter(adapter);
         circleIndicator.setViewPager(picturesPager);
 

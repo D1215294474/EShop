@@ -9,9 +9,9 @@
                   android:right="@dimen/spacing_large">
                 <shape>
                     <solid android:color="@color/orange"/>
-                    <size android:height="@dimen/size_2"/>
                 </shape>
             </item>
+            <item android:drawable="@color/colorPrimary" android:bottom="@dimen/size_2"/>
         </layer-list>
 
     </item>
